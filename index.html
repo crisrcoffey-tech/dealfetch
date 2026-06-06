@@ -1,0 +1,570 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<meta name="theme-color" content="#007A33" />
+<title>Publix BOGO Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  :root {
+    --publix-green: #007A33;
+    --publix-green-dark: #005f28;
+    --publix-green-soft: #e6f3ec;
+    --bogo: #007A33;
+    --save: #C8102E;
+    --ink: #15181c;
+    --ink-2: #41464d;
+    --muted: #6b7280;
+    --line: #e6e8ec;
+    --bg: #ffffff;
+    --card: #ffffff;
+    --chip-bg: #f3f4f6;
+    --cat-wine: #6d1638;
+    --cat-wine-bg: #fbe9ef;
+    --cat-beer: #b8730c;
+    --cat-beer-bg: #fdf1d9;
+    --cat-pork: #b34a4a;
+    --cat-pork-bg: #fbe7e7;
+    --cat-gf: #2e7d32;
+    --cat-gf-bg: #e6f3ec;
+    --shadow: 0 1px 2px rgba(15, 23, 42, .04), 0 4px 12px rgba(15, 23, 42, .04);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink); }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    line-height: 1.45;
+    padding-bottom: env(safe-area-inset-bottom, 0);
+  }
+
+  .container { max-width: 1180px; margin: 0 auto; padding: 0 20px; }
+
+  /* Header */
+  header.site {
+    background: var(--publix-green);
+    color: #fff;
+    padding: 24px 0 22px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    box-shadow: 0 1px 0 rgba(0,0,0,.06);
+  }
+  .brand { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
+  .brand-mark {
+    width: 36px; height: 36px;
+    background: #fff;
+    color: var(--publix-green);
+    border-radius: 9px;
+    display: grid; place-items: center;
+    font-weight: 800;
+    flex-shrink: 0;
+    box-shadow: 0 1px 0 rgba(0,0,0,.05);
+  }
+  .brand-mark svg { width: 22px; height: 22px; }
+  h1 { font-size: 22px; font-weight: 800; margin: 0; letter-spacing: -0.01em; }
+  .meta { display: flex; gap: 14px; flex-wrap: wrap; font-size: 13px; opacity: .92; margin-top: 4px; }
+  .meta span { display: inline-flex; align-items: center; gap: 6px; }
+  .meta svg { width: 14px; height: 14px; }
+
+  /* Filter chips */
+  .chips-wrap {
+    background: #fff;
+    border-bottom: 1px solid var(--line);
+    position: sticky;
+    top: 92px;
+    z-index: 9;
+  }
+  .chips {
+    display: flex;
+    gap: 8px;
+    padding: 14px 0 14px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .chips::-webkit-scrollbar { display: none; }
+  .chip {
+    flex-shrink: 0;
+    border: 1px solid var(--line);
+    background: var(--chip-bg);
+    color: var(--ink-2);
+    border-radius: 999px;
+    padding: 8px 14px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .15s ease;
+    font-family: inherit;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .chip:hover { background: #e9ebef; }
+  .chip[aria-pressed="true"] {
+    background: var(--publix-green);
+    color: #fff;
+    border-color: var(--publix-green);
+  }
+  .chip .count {
+    font-size: 12px;
+    font-weight: 700;
+    opacity: .7;
+    margin-left: 2px;
+  }
+  .chip[aria-pressed="true"] .count { opacity: 1; }
+
+  /* Main */
+  main { padding: 24px 0 56px; }
+
+  .grid {
+    display: grid;
+    gap: 16px;
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 640px) { .grid { grid-template-columns: 1fr 1fr; gap: 18px; } }
+  @media (min-width: 980px) { .grid { grid-template-columns: 1fr 1fr 1fr; gap: 20px; } }
+
+  /* Card */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--shadow);
+    transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+  }
+  .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(15,23,42,.05), 0 12px 24px rgba(15,23,42,.06);
+    border-color: #d6dae0;
+  }
+
+  .card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 9px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    flex-shrink: 0;
+  }
+  .badge svg { width: 12px; height: 12px; }
+  .badge.bogo { background: var(--publix-green); color: #fff; }
+  .badge.save { background: var(--save); color: #fff; }
+
+  .cat {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 8px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .01em;
+  }
+  .cat.wine { color: var(--cat-wine); background: var(--cat-wine-bg); }
+  .cat.beer { color: var(--cat-beer); background: var(--cat-beer-bg); }
+  .cat.pork { color: var(--cat-pork); background: var(--cat-pork-bg); }
+  .cat.gf   { color: var(--cat-gf);   background: var(--cat-gf-bg); }
+
+  .name {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--ink);
+    margin: 0 0 10px;
+    line-height: 1.3;
+    letter-spacing: -0.005em;
+  }
+
+  .price {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .price.bogo-text { color: var(--publix-green); }
+
+  .savings {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--save);
+    margin-top: 6px;
+  }
+  .savings svg { width: 13px; height: 13px; }
+
+  .details {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px dashed var(--line);
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.45;
+  }
+
+  .card-foot {
+    margin-top: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .card-foot svg { width: 12px; height: 12px; vertical-align: -1px; margin-right: 3px; }
+
+  /* Section heading */
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin: 4px 0 16px;
+  }
+  .section-head h2 {
+    font-size: 15px;
+    font-weight: 700;
+    margin: 0;
+    color: var(--ink-2);
+    letter-spacing: .01em;
+    text-transform: uppercase;
+  }
+  .section-head .count-pill {
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 600;
+  }
+
+  /* Empty state */
+  .empty {
+    text-align: center;
+    padding: 56px 24px;
+    background: #fafbfc;
+    border: 1px dashed var(--line);
+    border-radius: 14px;
+    color: var(--muted);
+  }
+  .empty svg { width: 32px; height: 32px; opacity: .5; margin-bottom: 10px; }
+  .empty h3 { font-size: 16px; font-weight: 700; color: var(--ink-2); margin: 0 0 4px; }
+  .empty p { margin: 0; font-size: 14px; }
+
+  /* Not found section */
+  .notfound {
+    margin-top: 48px;
+    padding-top: 28px;
+    border-top: 1px solid var(--line);
+  }
+  .notfound h2 {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    margin: 0 0 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .notfound h2 svg { width: 14px; height: 14px; }
+  .notfound-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .notfound-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: #f7f8fa;
+    border: 1px solid var(--line);
+    color: var(--muted);
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .notfound-item svg { width: 12px; height: 12px; opacity: .6; }
+
+  /* Loading skeleton */
+  .skeleton-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
+  @media (min-width: 640px) { .skeleton-grid { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 980px) { .skeleton-grid { grid-template-columns: 1fr 1fr 1fr; } }
+  .skel {
+    background: #f3f4f6;
+    border-radius: 14px;
+    height: 180px;
+    animation: pulse 1.4s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .55; } }
+
+  /* Footer */
+  footer {
+    margin-top: 32px;
+    padding: 24px 0 16px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 12px;
+  }
+  footer a { color: var(--publix-green); text-decoration: none; font-weight: 600; }
+
+  /* Small screen tweaks */
+  @media (max-width: 480px) {
+    .container { padding: 0 16px; }
+    h1 { font-size: 19px; }
+    .brand-mark { width: 32px; height: 32px; }
+    header.site { padding: 18px 0 16px; }
+    .chips-wrap { top: 80px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="container">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/>
+          <path d="M3 6h18"/>
+          <path d="M16 10a4 4 0 0 1-8 0"/>
+        </svg>
+      </div>
+      <div>
+        <h1>Publix BOGO Tracker</h1>
+      </div>
+    </div>
+    <div class="meta">
+      <span><i data-lucide="calendar"></i> <span id="weekOf">—</span></span>
+      <span><i data-lucide="clock"></i> Updated <span id="lastUpdated">—</span></span>
+    </div>
+  </div>
+</header>
+
+<div class="chips-wrap">
+  <div class="container">
+    <div class="chips" id="chips" role="tablist" aria-label="Category filter"></div>
+  </div>
+</div>
+
+<main>
+  <div class="container">
+    <div class="section-head">
+      <h2 id="sectionLabel">All Deals</h2>
+      <span class="count-pill" id="visibleCount">—</span>
+    </div>
+    <div id="content">
+      <div class="skeleton-grid">
+        <div class="skel"></div><div class="skel"></div><div class="skel"></div>
+        <div class="skel"></div><div class="skel"></div><div class="skel"></div>
+      </div>
+    </div>
+
+    <section class="notfound" id="notfoundSection" hidden>
+      <h2><i data-lucide="search-x"></i> Not on sale this week</h2>
+      <div class="notfound-list" id="notfoundList"></div>
+    </section>
+
+    <footer>
+      Refreshed automatically every Thursday morning.
+      Data scraped from <a href="https://www.publix.com/savings/weekly-ad" target="_blank" rel="noopener">Publix weekly ad</a>.
+    </footer>
+  </div>
+</main>
+
+<script>
+  // ---------- Helpers ----------
+  const CATEGORIES = [
+    { key: 'all',  label: 'All',         icon: 'layout-grid', match: () => true },
+    { key: 'wine', label: 'Wine',        icon: 'wine',        match: c => c === 'Wine' },
+    { key: 'beer', label: 'Beer',        icon: 'beer',        match: c => c === 'Beer' },
+    { key: 'pork', label: 'Pork',        icon: 'beef',        match: c => /pork/i.test(c) },
+    { key: 'gf',   label: 'Gluten-Free', icon: 'wheat-off',   match: c => /gluten/i.test(c) },
+  ];
+
+  const catClassFor = (category) => {
+    if (category === 'Wine') return 'wine';
+    if (category === 'Beer') return 'beer';
+    if (/pork/i.test(category)) return 'pork';
+    if (/gluten/i.test(category)) return 'gf';
+    return '';
+  };
+
+  const isBogo = (deal) => /buy\s*1\s*get\s*1\s*free/i.test(deal || '');
+
+  // Best-effort size pull from details (e.g. "750-mL bot.", "18.4 or 24-oz pkg.")
+  const extractSize = (details) => {
+    if (!details) return null;
+    const m = details.match(/(\d[\d./–-]*\s*[-]?\s*(?:oz|mL|ml|L|lb|fl\s*oz|ct|pk|pack)\b[^,(]*)/i);
+    return m ? m[1].trim() : null;
+  };
+
+  const formatDate = (iso) => {
+    if (!iso) return '—';
+    const d = new Date(iso + 'T00:00:00');
+    if (isNaN(d)) return iso;
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  };
+
+  const esc = (s) => String(s ?? '').replace(/[&<>"']/g, c => ({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  }[c]));
+
+  // ---------- State ----------
+  let DATA = null;
+  let activeCategory = 'all';
+
+  // ---------- Render ----------
+  function renderChips() {
+    const chips = document.getElementById('chips');
+    chips.innerHTML = '';
+    CATEGORIES.forEach(cat => {
+      const count = (DATA?.deals || []).filter(d => cat.match(d.category)).length;
+      const btn = document.createElement('button');
+      btn.className = 'chip';
+      btn.type = 'button';
+      btn.setAttribute('role', 'tab');
+      btn.setAttribute('aria-pressed', cat.key === activeCategory ? 'true' : 'false');
+      btn.dataset.cat = cat.key;
+      btn.innerHTML = `<i data-lucide="${cat.icon}"></i>${esc(cat.label)} <span class="count">${count}</span>`;
+      btn.addEventListener('click', () => {
+        activeCategory = cat.key;
+        renderChips();
+        renderDeals();
+      });
+      chips.appendChild(btn);
+    });
+    if (window.lucide) lucide.createIcons();
+  }
+
+  function renderDeals() {
+    const content = document.getElementById('content');
+    const label = document.getElementById('sectionLabel');
+    const countEl = document.getElementById('visibleCount');
+
+    const cat = CATEGORIES.find(c => c.key === activeCategory);
+    label.textContent = cat.key === 'all' ? 'All Deals' : `${cat.label} Deals`;
+
+    const items = (DATA?.deals || []).filter(d => cat.match(d.category));
+    countEl.textContent = `${items.length} ${items.length === 1 ? 'item' : 'items'}`;
+
+    if (items.length === 0) {
+      content.innerHTML = `
+        <div class="empty">
+          <i data-lucide="search-x"></i>
+          <h3>No deals this week</h3>
+          <p>Nothing on sale in this category right now — check back next Thursday.</p>
+        </div>`;
+      if (window.lucide) lucide.createIcons();
+      return;
+    }
+
+    const grid = document.createElement('div');
+    grid.className = 'grid';
+
+    items.forEach(d => {
+      const bogo = isBogo(d.deal);
+      const catCls = catClassFor(d.category);
+      const size = extractSize(d.details);
+
+      const card = document.createElement('article');
+      card.className = 'card';
+      card.innerHTML = `
+        <div class="card-top">
+          <span class="badge ${bogo ? 'bogo' : 'save'}">
+            <i data-lucide="${bogo ? 'tag' : 'percent'}"></i>${bogo ? 'BOGO' : 'Sale'}
+          </span>
+          <span class="cat ${catCls}">${esc(d.category)}</span>
+        </div>
+        <h3 class="name">${esc(d.name)}</h3>
+        <div class="price ${bogo ? 'bogo-text' : ''}">${esc(d.deal)}</div>
+        ${d.savings ? `
+          <div class="savings">
+            <i data-lucide="trending-down"></i>${esc(d.savings)}
+          </div>` : ''}
+        ${(d.details || size) ? `
+          <div class="details">${esc(d.details || size)}</div>` : ''}
+        <div class="card-foot">
+          <span><i data-lucide="calendar-days"></i>Valid ${esc(d.valid || '')}</span>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+
+    content.innerHTML = '';
+    content.appendChild(grid);
+    if (window.lucide) lucide.createIcons();
+  }
+
+  function renderNotFound() {
+    const items = DATA?.notFound || [];
+    const section = document.getElementById('notfoundSection');
+    const list = document.getElementById('notfoundList');
+    if (!items.length) { section.hidden = true; return; }
+    section.hidden = false;
+    list.innerHTML = items.map(it =>
+      `<span class="notfound-item"><i data-lucide="x"></i>${esc(it)}</span>`
+    ).join('');
+    if (window.lucide) lucide.createIcons();
+  }
+
+  function renderHeader() {
+    document.getElementById('weekOf').textContent = `Week of ${DATA?.weekOf || '—'}`;
+    document.getElementById('lastUpdated').textContent = formatDate(DATA?.lastUpdated);
+  }
+
+  function renderError(msg) {
+    document.getElementById('content').innerHTML = `
+      <div class="empty">
+        <i data-lucide="alert-triangle"></i>
+        <h3>Couldn't load deals</h3>
+        <p>${esc(msg)}</p>
+      </div>`;
+    if (window.lucide) lucide.createIcons();
+  }
+
+  // ---------- Boot ----------
+  async function init() {
+    try {
+      const res = await fetch('./publix_deals.json', { cache: 'no-store' });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      DATA = await res.json();
+      renderHeader();
+      renderChips();
+      renderDeals();
+      renderNotFound();
+    } catch (e) {
+      renderError(e.message || 'Network error');
+    }
+  }
+
+  // Initialize lucide icons that exist on first paint (header)
+  document.addEventListener('DOMContentLoaded', () => {
+    if (window.lucide) lucide.createIcons();
+    init();
+  });
+</script>
+</body>
+</html>
