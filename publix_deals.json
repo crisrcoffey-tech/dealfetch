@@ -1,175 +1,77 @@
 {
-  "lastUpdated": "2026-06-05",
-  "weekOf": "June 4–10, 2026",
+  "lastUpdated": "2026-06-12T10:52:34Z",
+  "weekOf": "June 11–17, 2026",
   "deals": [
     {
-      "name": "Art of the Cooper Special Selection Wine",
-      "category": "Wine",
-      "deal": "Buy 1 Get 1 Free",
-      "details": "of equal or lesser price",
-      "savings": "Save Up To $29.99",
-      "valid": "6/4 - 6/10"
-    },
-    {
-      "name": "Urgency Cabernet Sauvignon Wine",
+      "name": "Hawk Crest Cabernet Sauvignon Wine",
       "category": "Wine",
       "deal": "Buy 1 Get 1 Free",
       "details": "of equal or lesser price",
       "savings": "Save Up To $18.79",
-      "valid": "6/4 - 6/10"
+      "valid": "6/11 - 6/17"
     },
     {
-      "name": "Jaume Serra Cristalino Sparkling Brut Wine",
+      "name": "Ash & Reed Cabernet Sauvignon Wine",
       "category": "Wine",
       "deal": "Buy 1 Get 1 Free",
       "details": "of equal or lesser price",
-      "savings": "Save Up To $11.29",
-      "valid": "6/4 - 6/10"
+      "savings": "Save Up To $37.99",
+      "valid": "6/11 - 6/17"
     },
     {
-      "name": "Decoy Cabernet Sauvignon Wine",
+      "name": "Invivo X Rosé Wine",
       "category": "Wine",
-      "deal": "$18.99",
-      "details": "750-mL bot. (Other 750-mL Varieties Also on Sale)",
-      "savings": "Save Up To $6.00",
-      "valid": "6/4 - 6/10"
+      "deal": "Buy 1 Get 1 Free",
+      "details": "of equal or lesser price",
+      "savings": "Save Up To $27.99",
+      "valid": "6/11 - 6/17"
     },
     {
-      "name": "Kendall-Jackson Chardonnay Wine",
-      "category": "Wine",
-      "deal": "$9.99",
-      "details": "Vintner's Reserve, 750-mL bot.",
-      "savings": "Save Up To $2.00",
-      "valid": "6/4 - 6/10"
-    },
-    {
-      "name": "The Skinny Vine Red Blend Wine",
-      "category": "Wine",
-      "deal": "$7.99",
-      "details": "Or Chardonnay, 750-mL bot.",
-      "savings": "Save Up To $2.00",
-      "valid": "6/4 - 6/10"
-    },
-    {
-      "name": "Decoy Chardonnay or Sauvignon Blanc Wine",
-      "category": "Wine",
-      "deal": "$16.99",
-      "details": "750-mL bot.",
-      "savings": null,
-      "valid": "6/4 - 6/10"
-    },
-    {
-      "name": "Kendall-Jackson Cabernet Sauvignon Wine",
-      "category": "Wine",
-      "deal": "$14.99",
-      "details": "750-mL bot.",
-      "savings": null,
-      "valid": "6/4 - 6/10"
-    },
-    {
-      "name": "Yellow Tail Chardonnay Wine",
-      "category": "Wine",
-      "deal": "$9.99",
-      "details": "1.5-L bot. (Other 1.5-L Varieties Also on Sale)",
-      "savings": null,
-      "valid": "6/4 - 6/10"
-    },
-    {
-      "name": "12-Pack Michelob Ultra Pure Gold Light Lager",
+      "name": "12-Pack Golden Road Brewing Beer",
       "category": "Beer",
       "deal": "Buy 1 Get 1 Free",
       "details": "of equal or lesser price",
-      "savings": "Save Up To $20.79",
-      "valid": "6/4 - 6/10"
+      "savings": "Save Up To $21.79",
+      "valid": "6/11 - 6/17"
     },
     {
-      "name": "6-Pack New Belgium Beer",
+      "name": "24-Pack Michelob Ultra Beer",
       "category": "Beer",
-      "deal": "Buy 1 Get 1 Free",
-      "details": "of equal or lesser price",
-      "savings": "Save Up To $13.69",
-      "valid": "6/4 - 6/10"
-    },
-    {
-      "name": "6-Pack Red Stripe Jamaican Lager",
-      "category": "Beer",
-      "deal": "Buy 1 Get 1 Free",
-      "details": "of equal or lesser price",
-      "savings": "Save Up To $11.29",
-      "valid": "6/4 - 6/10"
-    },
-    {
-      "name": "18-Pack Michelob Ultra Beer",
-      "category": "Beer",
-      "deal": "$21.39",
-      "details": "12-oz can or bot. (Excluding Ultra Pure Gold)",
-      "savings": "Save Up To $2.40",
-      "valid": "6/4 - 6/10"
-    },
-    {
-      "name": "12-Pack Yuengling Traditional Lager",
-      "category": "Beer",
-      "deal": "$13.99",
+      "deal": "$25.99",
       "details": "12-oz can or bot.",
-      "savings": null,
-      "valid": "6/4 - 6/10"
+      "savings": "Save Up To $4.00",
+      "valid": "6/11 - 6/17"
     },
     {
-      "name": "12-Pack Peroni Nastro Azzurro Beer",
-      "category": "Beer",
-      "deal": "$18.99",
-      "details": "12-oz bot.",
-      "savings": null,
-      "valid": "6/4 - 6/10"
-    },
-    {
-      "name": "12-Pack Sierra Nevada Brewing Co. Beer",
-      "category": "Beer",
-      "deal": "$18.67",
-      "details": "12-oz can or bot.",
-      "savings": null,
-      "valid": "6/4 - 6/10"
-    },
-    {
-      "name": "12-Pack White Claw Hard Seltzer",
-      "category": "Beer",
-      "deal": "$19.67",
-      "details": "Variety Pack #1, 12-oz can",
-      "savings": null,
-      "valid": "6/4 - 6/10"
-    },
-    {
-      "name": "Hormel Marinated Pork Loin Tenderloin",
+      "name": "Hatfield Pork Tenderloin",
       "category": "Pork Tenderloin",
-      "deal": "2 for $12.00",
-      "details": "Or Filet, 18.4 or 24-oz pkg.",
-      "savings": "Save Up To $6.98 On 2",
-      "valid": "6/4 - 6/10"
-    },
-    {
-      "name": "Publix Pork Boston Butt Roast",
-      "category": "Pork Shoulder",
-      "deal": "$3.79 lb",
-      "details": "Boneless",
-      "savings": "Save Up To $0.50 Lb",
-      "valid": "6/4 - 6/10"
+      "deal": "$5.99",
+      "details": "Or Pork Loin Filet, 18.4 or 22-oz pkg.",
+      "savings": "Save Up To $3.50",
+      "valid": "6/11 - 6/17"
     },
     {
       "name": "Heavenly Hunks Gluten-Free Bites",
       "category": "Gluten-Free",
-      "deal": "Buy 1 Get 1 Free",
-      "details": "of equal or lesser price",
-      "savings": "Save Up To $4.59",
-      "valid": "6/4 - 6/10"
+      "deal": "$3.59",
+      "details": "Oatmeal Chocolate Chip, Peanut Butter Chocolate, or Brownie, 6-oz bag",
+      "savings": "Save Up To $1.00",
+      "valid": "6/11 - 6/17"
     },
     {
-      "name": "Canyon Bakehouse Bread, Bagels or Rolls",
+      "name": "GreenWise Gluten-Free Rice Crackers",
       "category": "Gluten-Free",
-      "deal": "$6.49",
-      "details": "10.8–18-oz (frozen)",
+      "deal": "2 for $6.00",
+      "details": "Multigrain Flaxseed, Multi-Seed, or Sesame, 3.5-oz box",
       "savings": null,
-      "valid": "5/30 - 6/12"
+      "valid": "6/11 - 6/17"
     }
   ],
-  "notFound": ["Old El Paso Taco Shells", "Gluten-Free Cereals", "Gluten-Free Pizzas", "Albanese Gummies"]
+  "notFound": [
+    "Pork Shoulder",
+    "Old El Paso Taco Shells",
+    "Gluten-Free Cereals",
+    "Gluten-Free Pizzas",
+    "Albanese Gummies"
+  ]
 }
