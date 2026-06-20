@@ -1,77 +1,99 @@
 {
-  "lastUpdated": "2026-06-12T10:52:34Z",
-  "weekOf": "June 11–17, 2026",
+  "lastUpdated": "2026-06-20T01:19:30Z",
+  "weekOf": "June 18–24, 2026",
   "deals": [
     {
-      "name": "Hawk Crest Cabernet Sauvignon Wine",
+      "name": "Buck Shack Cabernet Sauvignon Wine",
+      "category": "Wine",
+      "deal": "Buy 1 Get 1 Free",
+      "details": "of equal or lesser price",
+      "savings": "Save Up To $17.49",
+      "valid": "6/18 - 6/24"
+    },
+    {
+      "name": "Campo Viejo Cava Brut Sparkling Wine",
+      "category": "Wine",
+      "deal": "Buy 1 Get 1 Free",
+      "details": "of equal or lesser price",
+      "savings": "Save Up To $16.49",
+      "valid": "6/18 - 6/24"
+    },
+    {
+      "name": "Clay Creek Cabernet Sauvignon Wine",
       "category": "Wine",
       "deal": "Buy 1 Get 1 Free",
       "details": "of equal or lesser price",
       "savings": "Save Up To $18.79",
-      "valid": "6/11 - 6/17"
+      "valid": "6/18 - 6/24"
     },
     {
-      "name": "Ash & Reed Cabernet Sauvignon Wine",
+      "name": "Windfinder Cabernet Sauvignon Wine",
       "category": "Wine",
       "deal": "Buy 1 Get 1 Free",
       "details": "of equal or lesser price",
-      "savings": "Save Up To $37.99",
-      "valid": "6/11 - 6/17"
+      "savings": "Save Up To $22.99",
+      "valid": "6/18 - 6/24"
     },
     {
-      "name": "Invivo X Rosé Wine",
-      "category": "Wine",
+      "name": "12-Pack Heineken Silver Beer",
+      "category": "Beer",
       "deal": "Buy 1 Get 1 Free",
       "details": "of equal or lesser price",
-      "savings": "Save Up To $27.99",
-      "valid": "6/11 - 6/17"
+      "savings": "Save Up To $18.22",
+      "valid": "6/18 - 6/24"
     },
     {
-      "name": "12-Pack Golden Road Brewing Beer",
+      "name": "12-Pack Leinenkugel's Brewing Co. Beer",
       "category": "Beer",
       "deal": "Buy 1 Get 1 Free",
       "details": "of equal or lesser price",
       "savings": "Save Up To $21.79",
-      "valid": "6/11 - 6/17"
+      "valid": "6/18 - 6/24"
     },
     {
-      "name": "24-Pack Michelob Ultra Beer",
+      "name": "6-Pack Samuel Adams Beer",
       "category": "Beer",
-      "deal": "$25.99",
-      "details": "12-oz can or bot.",
-      "savings": "Save Up To $4.00",
-      "valid": "6/11 - 6/17"
+      "deal": "Buy 1 Get 1 Free",
+      "details": "of equal or lesser price",
+      "savings": "Save Up To $13.19",
+      "valid": "6/18 - 6/24"
     },
     {
-      "name": "Hatfield Pork Tenderloin",
-      "category": "Pork Tenderloin",
-      "deal": "$5.99",
-      "details": "Or Pork Loin Filet, 18.4 or 22-oz pkg.",
-      "savings": "Save Up To $3.50",
-      "valid": "6/11 - 6/17"
+      "name": "12-Pack Happy Dad Hard Seltzer",
+      "category": "Beer",
+      "deal": "Buy 1 Get 1 Free",
+      "details": "of equal or lesser price (hard seltzer)",
+      "savings": "Save Up To $20.79",
+      "valid": "6/18 - 6/24"
     },
     {
-      "name": "Heavenly Hunks Gluten-Free Bites",
-      "category": "Gluten-Free",
-      "deal": "$3.59",
-      "details": "Oatmeal Chocolate Chip, Peanut Butter Chocolate, or Brownie, 6-oz bag",
-      "savings": "Save Up To $1.00",
-      "valid": "6/11 - 6/17"
+      "name": "Old El Paso Taco Dinner Kit",
+      "category": "Old El Paso Taco Shells",
+      "deal": "Buy 1 Get 1 Free",
+      "details": "of equal or lesser price (kit includes shells + seasoning)",
+      "savings": "Save Up To $5.25",
+      "valid": "6/18 - 6/24"
     },
     {
-      "name": "GreenWise Gluten-Free Rice Crackers",
-      "category": "Gluten-Free",
-      "deal": "2 for $6.00",
-      "details": "Multigrain Flaxseed, Multi-Seed, or Sesame, 3.5-oz box",
-      "savings": null,
-      "valid": "6/11 - 6/17"
+      "name": "Daiya Pizza",
+      "category": "Gluten-Free Pizza",
+      "deal": "Buy 1 Get 1 Free",
+      "details": "of equal or lesser price (Daiya is gluten-free and dairy-free)",
+      "savings": "Save Up To $9.29",
+      "valid": "6/18 - 6/24"
+    },
+    {
+      "name": "Albanese Gummi Candy",
+      "category": "Albanese Gummies",
+      "deal": "Buy 1 Get 1 Free",
+      "details": "of equal or lesser price",
+      "savings": "Save Up To $3.99",
+      "valid": "6/18 - 6/24"
     }
   ],
   "notFound": [
+    "Pork Tenderloin",
     "Pork Shoulder",
-    "Old El Paso Taco Shells",
-    "Gluten-Free Cereals",
-    "Gluten-Free Pizzas",
-    "Albanese Gummies"
+    "Gluten-Free Cereal"
   ]
 }
