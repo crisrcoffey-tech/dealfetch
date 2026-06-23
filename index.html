@@ -9,6 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script src="config.js"></script>
 <style>
   :root {
     --publix-green: #007A33;
@@ -56,6 +57,12 @@
     z-index: 10;
     box-shadow: 0 1px 0 rgba(0,0,0,.06);
   }
+  .header-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+  }
   .brand { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
   .brand-mark {
     width: 36px; height: 36px;
@@ -72,6 +79,44 @@
   .meta { display: flex; gap: 14px; flex-wrap: wrap; font-size: 13px; opacity: .92; margin-top: 4px; }
   .meta span { display: inline-flex; align-items: center; gap: 6px; }
   .meta svg { width: 14px; height: 14px; }
+
+  /* Header auth area */
+  .auth-area { display: flex; align-items: center; gap: 8px; flex-shrink: 0; padding-top: 2px; }
+  .auth-btn {
+    background: rgba(255,255,255,.16);
+    color: #fff;
+    border: 1px solid rgba(255,255,255,.28);
+    border-radius: 8px;
+    padding: 7px 12px;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: background .15s ease, border-color .15s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .auth-btn:hover { background: rgba(255,255,255,.26); border-color: rgba(255,255,255,.45); }
+  .auth-btn svg { width: 14px; height: 14px; }
+  .auth-btn.primary { background: #fff; color: var(--publix-green); border-color: #fff; }
+  .auth-btn.primary:hover { background: #f3f4f6; }
+  .auth-email {
+    color: #fff;
+    font-size: 13px;
+    font-weight: 500;
+    opacity: .92;
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding-right: 4px;
+  }
+  @media (max-width: 640px) {
+    .auth-email { max-width: 120px; font-size: 12px; }
+    .auth-btn { padding: 6px 10px; font-size: 12px; }
+  }
 
   /* Filter chips */
   .chips-wrap {
@@ -120,6 +165,44 @@
     margin-left: 2px;
   }
   .chip[aria-pressed="true"] .count { opacity: 1; }
+
+  /* Filtering-active pill */
+  .filter-pill-wrap { padding: 16px 0 0; }
+  .filter-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--publix-green-soft);
+    border: 1px solid #c7e2d2;
+    color: var(--publix-green-dark);
+    padding: 8px 14px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .filter-pill svg { width: 14px; height: 14px; }
+  .filter-pill button {
+    background: transparent;
+    border: none;
+    color: var(--publix-green-dark);
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: underline;
+    padding: 0;
+  }
+
+  /* Config warning */
+  .config-warn {
+    background: #fff7e6;
+    border: 1px solid #f5d48a;
+    color: #8a5a00;
+    padding: 12px 16px;
+    border-radius: 10px;
+    font-size: 13px;
+    margin: 16px 0 0;
+  }
+  .config-warn code { background: rgba(0,0,0,.05); padding: 2px 5px; border-radius: 4px; font-size: 12px; }
 
   /* Main */
   main { padding: 24px 0 56px; }
@@ -330,6 +413,196 @@
   }
   footer a { color: var(--publix-green); text-decoration: none; font-weight: 600; }
 
+  /* Modal */
+  .modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, .5);
+    z-index: 100;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 60px 16px 24px;
+    overflow-y: auto;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .modal[hidden] { display: none; }
+  .modal-card {
+    background: #fff;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 480px;
+    box-shadow: 0 20px 60px rgba(15, 23, 42, .25);
+    overflow: hidden;
+    animation: modalIn .18s ease-out;
+  }
+  .modal-card.wide { max-width: 640px; }
+  @keyframes modalIn { from { transform: translateY(-8px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+  .modal-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 20px;
+    border-bottom: 1px solid var(--line);
+  }
+  .modal-head h3 { margin: 0; font-size: 17px; font-weight: 800; color: var(--ink); letter-spacing: -0.005em; }
+  .modal-close {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: var(--muted);
+    padding: 4px;
+    line-height: 0;
+    border-radius: 6px;
+  }
+  .modal-close:hover { background: #f3f4f6; color: var(--ink); }
+  .modal-close svg { width: 18px; height: 18px; }
+  .modal-body { padding: 20px; max-height: 70vh; overflow-y: auto; }
+  .modal-foot {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 14px 20px;
+    border-top: 1px solid var(--line);
+    background: #fafbfc;
+  }
+  .modal-foot .status-msg {
+    flex: 1;
+    font-size: 13px;
+    color: var(--muted);
+    text-align: left;
+  }
+
+  .btn {
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 9px 16px;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+    background: #fff;
+    color: var(--ink);
+    cursor: pointer;
+    transition: background .15s ease, border-color .15s ease;
+  }
+  .btn:hover { background: #f3f4f6; }
+  .btn.primary { background: var(--publix-green); color: #fff; border-color: var(--publix-green); }
+  .btn.primary:hover { background: var(--publix-green-dark); border-color: var(--publix-green-dark); }
+  .btn.subtle { color: var(--muted); }
+
+  /* Form inputs */
+  .field { display: block; margin-bottom: 14px; }
+  .field label { display: block; font-size: 13px; font-weight: 600; color: var(--ink-2); margin-bottom: 6px; }
+  .pref-input, input[type="email"].pref-input, input[type="text"].pref-input {
+    width: 100%;
+    font-family: inherit;
+    font-size: 14px;
+    padding: 10px 12px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: #fff;
+    color: var(--ink);
+    transition: border-color .15s ease, box-shadow .15s ease;
+  }
+  .pref-input:focus {
+    outline: none;
+    border-color: var(--publix-green);
+    box-shadow: 0 0 0 3px var(--publix-green-soft);
+  }
+
+  /* Prefs sections */
+  .pref-section { margin-bottom: 20px; }
+  .pref-section h4 {
+    margin: 0 0 8px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ink-2);
+    text-transform: uppercase;
+    letter-spacing: .04em;
+  }
+  .pref-help { margin: 0 0 8px; font-size: 13px; color: var(--muted); line-height: 1.5; }
+  .pref-checks { display: flex; flex-wrap: wrap; gap: 8px; }
+  .pref-check {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 7px 12px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    background: #fff;
+    color: var(--ink-2);
+    transition: background .15s ease, border-color .15s ease;
+  }
+  .pref-check:hover { background: #f7f8fa; border-color: #d6dae0; }
+  .pref-check input { accent-color: var(--publix-green); }
+  .pref-check input:checked + span { color: var(--publix-green-dark); font-weight: 700; }
+
+  /* Watchlist */
+  .watchlist-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 0 0 10px;
+    min-height: 4px;
+  }
+  .wl-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--publix-green-soft);
+    color: var(--publix-green-dark);
+    padding: 5px 6px 5px 11px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .wl-remove {
+    background: rgba(0,0,0,.08);
+    color: var(--publix-green-dark);
+    border: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    font-size: 14px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0;
+    font-family: inherit;
+  }
+  .wl-remove:hover { background: rgba(0,0,0,.16); }
+  .pref-details { margin-top: 10px; font-size: 13px; }
+  .pref-details summary {
+    cursor: pointer;
+    color: var(--publix-green-dark);
+    font-weight: 600;
+    padding: 6px 0;
+  }
+  .watchlist-suggestions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+    max-height: 200px;
+    overflow-y: auto;
+    padding: 4px 2px;
+  }
+  .watchlist-suggestions .suggestion {
+    font-family: inherit;
+    font-size: 12px;
+    background: #f3f4f6;
+    color: var(--ink-2);
+    border: 1px solid var(--line);
+    padding: 4px 9px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background .15s ease;
+  }
+  .watchlist-suggestions .suggestion:hover { background: var(--publix-green-soft); color: var(--publix-green-dark); border-color: #c7e2d2; }
+
   /* Small screen tweaks */
   @media (max-width: 480px) {
     .container { padding: 0 16px; }
@@ -337,6 +610,8 @@
     .brand-mark { width: 32px; height: 32px; }
     header.site { padding: 18px 0 16px; }
     .chips-wrap { top: 80px; }
+    .modal { padding: 24px 12px; }
+    .modal-card { border-radius: 12px; }
   }
 </style>
 </head>
@@ -344,21 +619,42 @@
 
 <header class="site">
   <div class="container">
-    <div class="brand">
-      <div class="brand-mark" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/>
-          <path d="M3 6h18"/>
-          <path d="M16 10a4 4 0 0 1-8 0"/>
-        </svg>
-      </div>
+    <div class="header-row">
       <div>
-        <h1>Publix BOGO Tracker</h1>
+        <div class="brand">
+          <div class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/>
+              <path d="M3 6h18"/>
+              <path d="M16 10a4 4 0 0 1-8 0"/>
+            </svg>
+          </div>
+          <div>
+            <h1>Publix BOGO Tracker</h1>
+          </div>
+        </div>
+        <div class="meta">
+          <span><i data-lucide="calendar"></i> <span id="weekOf">—</span></span>
+          <span><i data-lucide="clock"></i> Updated <span id="lastUpdated">—</span></span>
+        </div>
       </div>
-    </div>
-    <div class="meta">
-      <span><i data-lucide="calendar"></i> <span id="weekOf">—</span></span>
-      <span><i data-lucide="clock"></i> Updated <span id="lastUpdated">—</span></span>
+
+      <div class="auth-area">
+        <div id="authSignedOut">
+          <button id="btnSignIn" class="auth-btn primary" type="button">
+            <i data-lucide="log-in"></i> Sign in
+          </button>
+        </div>
+        <div id="authSignedIn" hidden style="display:flex;align-items:center;gap:8px;">
+          <span id="authUserEmail" class="auth-email" title=""></span>
+          <button id="btnPrefs" class="auth-btn" type="button" aria-label="Preferences">
+            <i data-lucide="settings"></i> Preferences
+          </button>
+          <button id="btnSignOut" class="auth-btn" type="button" aria-label="Sign out">
+            <i data-lucide="log-out"></i> Sign out
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </header>
@@ -371,6 +667,18 @@
 
 <main>
   <div class="container">
+    <div id="configWarning" class="config-warn" hidden>
+      <strong>Heads up:</strong> Supabase isn't configured yet. Edit <code>config.js</code> with your project URL and anon key — see <code>SUPABASE_SETUP.md</code>. Sign in is disabled until then.
+    </div>
+
+    <div class="filter-pill-wrap" id="filterPillWrap" hidden>
+      <span class="filter-pill">
+        <i data-lucide="filter"></i>
+        <span id="filterPillText">Filtering active</span>
+        <button type="button" id="btnClearActiveFilters">clear</button>
+      </span>
+    </div>
+
     <div class="section-head">
       <h2 id="sectionLabel">All Deals</h2>
       <span class="count-pill" id="visibleCount">—</span>
@@ -394,6 +702,64 @@
   </div>
 </main>
 
+<!-- Sign In modal -->
+<div class="modal" id="signInModal" hidden>
+  <div class="modal-card" role="dialog" aria-labelledby="signInTitle" aria-modal="true">
+    <div class="modal-head">
+      <h3 id="signInTitle">Sign in</h3>
+      <button class="modal-close" id="btnCloseSignIn" type="button" aria-label="Close">
+        <i data-lucide="x"></i>
+      </button>
+    </div>
+    <form class="modal-body" id="signInForm">
+      <p class="pref-help" style="margin-bottom:14px;">Enter your email and we'll send you a one-tap sign-in link.</p>
+      <div class="field">
+        <label for="signInEmail">Email</label>
+        <input type="email" class="pref-input" id="signInEmail" required autocomplete="email" placeholder="you@example.com" />
+      </div>
+      <div class="modal-foot" style="border-top:none;background:transparent;padding:0;">
+        <span class="status-msg" id="signInStatus"></span>
+        <button type="submit" class="btn primary">Send magic link</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Preferences modal -->
+<div class="modal" id="prefsModal" hidden>
+  <div class="modal-card wide" role="dialog" aria-labelledby="prefsTitle" aria-modal="true">
+    <div class="modal-head">
+      <h3 id="prefsTitle">Preferences</h3>
+      <button class="modal-close" id="btnClosePrefs" type="button" aria-label="Close">
+        <i data-lucide="x"></i>
+      </button>
+    </div>
+    <div class="modal-body">
+      <p class="pref-help">Leave a section empty to show everything in that dimension. Filters apply to the deals list below; the category chips at the top still work as a second-level filter.</p>
+
+      <div class="pref-section">
+        <h4>Categories</h4>
+        <div class="pref-checks" id="prefCategories"></div>
+      </div>
+
+      <div class="pref-section">
+        <h4>Sale type</h4>
+        <div class="pref-checks" id="prefSaleTypes"></div>
+      </div>
+
+      <div class="pref-section">
+        <h4>Watchlist</h4>
+        <div id="prefWatchlist"></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <span class="status-msg" id="prefStatus"></span>
+      <button type="button" class="btn subtle" id="btnClearPrefs">Clear all</button>
+      <button type="button" class="btn primary" id="btnSavePrefs">Save</button>
+    </div>
+  </div>
+</div>
+
 <script>
   // ---------- Helpers ----------
   const CATEGORIES = [
@@ -413,8 +779,8 @@
   };
 
   const isBogo = (deal) => /buy\s*1\s*get\s*1\s*free/i.test(deal || '');
+  const saleTypeOf = (deal) => isBogo(deal) ? 'BOGO' : 'SALE';
 
-  // Best-effort size pull from details (e.g. "750-mL bot.", "18.4 or 24-oz pkg.")
   const extractSize = (details) => {
     if (!details) return null;
     const m = details.match(/(\d[\d./–-]*\s*[-]?\s*(?:oz|mL|ml|L|lb|fl\s*oz|ct|pk|pack)\b[^,(]*)/i);
@@ -436,12 +802,38 @@
   let DATA = null;
   let activeCategory = 'all';
 
+  // Apply per-user preferences from preferences.js (if signed in).
+  // Returns the deals array filtered down to what the user wants to see.
+  function applyUserPrefs(deals) {
+    const prefs = window.publixPrefs?.currentFilters?.() || null;
+    if (!prefs) return deals;
+    const { categories = [], watchlist = [], sale_types = [] } = prefs;
+    if (!categories.length && !watchlist.length && !sale_types.length) return deals;
+
+    const wlLower = watchlist.map(w => String(w).toLowerCase());
+
+    return deals.filter(d => {
+      if (categories.length && !categories.includes(d.category)) return false;
+      if (sale_types.length && !sale_types.includes(saleTypeOf(d.deal))) return false;
+      if (wlLower.length) {
+        const name = String(d.name || '').toLowerCase();
+        if (!wlLower.some(w => name.includes(w))) return false;
+      }
+      return true;
+    });
+  }
+
+  function baseDeals() {
+    return applyUserPrefs(DATA?.deals || []);
+  }
+
   // ---------- Render ----------
   function renderChips() {
     const chips = document.getElementById('chips');
+    const deals = baseDeals();
     chips.innerHTML = '';
     CATEGORIES.forEach(cat => {
-      const count = (DATA?.deals || []).filter(d => cat.match(d.category)).length;
+      const count = deals.filter(d => cat.match(d.category)).length;
       const btn = document.createElement('button');
       btn.className = 'chip';
       btn.type = 'button';
@@ -467,15 +859,16 @@
     const cat = CATEGORIES.find(c => c.key === activeCategory);
     label.textContent = cat.key === 'all' ? 'All Deals' : `${cat.label} Deals`;
 
-    const items = (DATA?.deals || []).filter(d => cat.match(d.category));
+    const items = baseDeals().filter(d => cat.match(d.category));
     countEl.textContent = `${items.length} ${items.length === 1 ? 'item' : 'items'}`;
 
     if (items.length === 0) {
+      const filtering = window.publixPrefs?.isActive?.();
       content.innerHTML = `
         <div class="empty">
           <i data-lucide="search-x"></i>
-          <h3>No deals this week</h3>
-          <p>Nothing on sale in this category right now — check back next Thursday.</p>
+          <h3>No deals match</h3>
+          <p>${filtering ? 'Your saved preferences are filtering everything out. Try loosening them in Preferences.' : 'Nothing on sale in this category right now — check back next Thursday.'}</p>
         </div>`;
       if (window.lucide) lucide.createIcons();
       return;
@@ -518,6 +911,22 @@
     if (window.lucide) lucide.createIcons();
   }
 
+  function renderFilterPill() {
+    const wrap = document.getElementById('filterPillWrap');
+    const text = document.getElementById('filterPillText');
+    if (!wrap || !text) return;
+    const prefs = window.publixPrefs?.currentFilters?.() || null;
+    const active = window.publixPrefs?.isActive?.() || false;
+    if (!active || !prefs) { wrap.hidden = true; return; }
+    const parts = [];
+    if (prefs.categories?.length) parts.push(`${prefs.categories.length} categor${prefs.categories.length === 1 ? 'y' : 'ies'}`);
+    if (prefs.watchlist?.length)  parts.push(`${prefs.watchlist.length} watchlist item${prefs.watchlist.length === 1 ? '' : 's'}`);
+    if (prefs.sale_types?.length) parts.push(`${prefs.sale_types.length} sale type${prefs.sale_types.length === 1 ? '' : 's'}`);
+    text.textContent = 'Filtering by: ' + parts.join(', ');
+    wrap.hidden = false;
+    if (window.lucide) lucide.createIcons();
+  }
+
   function renderNotFound() {
     const items = DATA?.notFound || [];
     const section = document.getElementById('notfoundSection');
@@ -545,15 +954,24 @@
     if (window.lucide) lucide.createIcons();
   }
 
+  function rerenderAll() {
+    if (!DATA) return;
+    renderFilterPill();
+    renderChips();
+    renderDeals();
+  }
+  // Exposed so auth.js / preferences.js can trigger re-render on state changes.
+  window.publixRerender = rerenderAll;
+
   // ---------- Boot ----------
   async function init() {
     try {
       const res = await fetch('./publix_deals.json', { cache: 'no-store' });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       DATA = await res.json();
+      window.PUBLIX_DATA = DATA;
       renderHeader();
-      renderChips();
-      renderDeals();
+      rerenderAll();
       renderNotFound();
     } catch (e) {
       renderError(e.message || 'Network error');
@@ -565,6 +983,16 @@
     if (window.lucide) lucide.createIcons();
     init();
   });
+
+  // Re-render when prefs or auth state change
+  window.addEventListener('publix-prefs-change', rerenderAll);
+  window.addEventListener('publix-auth-change', rerenderAll);
 </script>
+
+<!-- Supabase auth + preferences (ES modules, load after the inline render script
+     so window.publixRerender exists when they dispatch their first events). -->
+<script type="module" src="auth.js"></script>
+<script type="module" src="preferences.js"></script>
+
 </body>
 </html>
