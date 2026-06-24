@@ -7,5 +7,5 @@
 //
 // See config.example.js and SUPABASE_SETUP.md for the full walkthrough.
 
-window.SUPABASE_URL = "PASTE_SUPABASE_PROJECT_URL_HERE";
-window.SUPABASE_ANON_KEY = "PASTE_SUPABASE_ANON_KEY_HERE";
+window.SUPABASE_URL = "https://poxkytsrejvolfvurthj.supabase.co";
+window.SUPABASE_ANON_KEY = "sb_publishable_Xf46fYPbwj-l4j7mIPwVnw_wJz6hpDp";

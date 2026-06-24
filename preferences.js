@@ -3,7 +3,7 @@
 
 import { supabase } from './auth.js';
 
-const TABLE = 'publix_user_preferences';
+const TABLE = 'user_preferences';
 const DEFAULTS = Object.freeze({ categories: [], watchlist: [], sale_types: [] });
 
 let current = { ...DEFAULTS };

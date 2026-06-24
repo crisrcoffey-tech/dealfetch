@@ -50,29 +50,33 @@ working Sign In button within ~30 seconds.
 
 ```sql
 -- Per-user preferences for the DealFetch dashboard.
-create table publix_user_preferences (
+create table user_preferences (
   user_id     uuid        primary key references auth.users(id) on delete cascade,
   categories  jsonb       default '[]'::jsonb,
   watchlist   jsonb       default '[]'::jsonb,
   sale_types  jsonb       default '[]'::jsonb,
+  store_ids   jsonb       default '[]'::jsonb,
   updated_at  timestamptz default now()
 );
 
-alter table publix_user_preferences enable row level security;
+alter table user_preferences enable row level security;
 
 create policy "Users can read own preferences"
-  on publix_user_preferences for select
+  on user_preferences for select
   using (auth.uid() = user_id);
 
 create policy "Users can insert own preferences"
-  on publix_user_preferences for insert
+  on user_preferences for insert
   with check (auth.uid() = user_id);
 
 create policy "Users can update own preferences"
-  on publix_user_preferences for update
+  on user_preferences for update
   using (auth.uid() = user_id)
   with check (auth.uid() = user_id);
 ```
+
+The `store_ids` column is reserved for the upcoming multi-store feature; the
+client does not read or write it yet, so it stays at its `[]` default.
 
 That's the full schema. There are no deny policies — RLS itself denies by
 default; the three policies above are the only ways anyone can touch the
@@ -89,7 +93,7 @@ you set up in step 4. With those policies in place, the only operations the
 anon key permits are:
 
 - Sign in with magic link (via the `auth` API).
-- Read / insert / update **their own** `publix_user_preferences` row,
+- Read / insert / update **their own** `user_preferences` row,
   once signed in.
 
 So committing `config.js` with real values is fine for this project. The
@@ -115,7 +119,7 @@ That's overkill for a static HTML site, so we skip it.
   sign-in, sign-out, and the magic-link callback URL fragment. Dispatches
   `publix-auth-change` events that the rest of the page listens for.
 - `preferences.js` — ES module. Fetches the current user's row from
-  `publix_user_preferences` on sign-in (or returns empty defaults if no row
+  `user_preferences` on sign-in (or returns empty defaults if no row
   yet), powers the Preferences modal, and upserts on Save. Exposes
   `window.publixPrefs.currentFilters()` and `window.publixPrefs.isActive()`
   for the renderer.
