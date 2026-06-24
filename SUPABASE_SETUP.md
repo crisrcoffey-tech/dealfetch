@@ -1,4 +1,4 @@
-# Supabase setup for the Publix BOGO dashboard
+# Supabase setup for the DealFetch dashboard
 
 Sign-in (email magic link) and per-user filter preferences are powered by a
 dedicated Supabase project. This document is the one-time setup walkthrough
@@ -21,7 +21,9 @@ for that project, plus the SQL it needs.
 
 3. **Allow the live site as a redirect target**
    - Authentication → **URL Configuration**.
-   - **Site URL**: `https://publix-bogos-dashboard.vercel.app`
+   - **Site URL**: `https://publix-bogos-dashboard.vercel.app` (Vercel auto-URL
+     for now — replace with `https://dealfetch.app` once the custom domain is
+     wired up.)
    - **Redirect URLs** (Add URL): `https://publix-bogos-dashboard.vercel.app`
      and `https://publix-bogos-dashboard.vercel.app/*`
    - (Optional, for local testing: add `http://localhost:5500` or whatever
@@ -47,7 +49,7 @@ working Sign In button within ~30 seconds.
 ## SQL to run
 
 ```sql
--- Per-user preferences for the Publix BOGO dashboard.
+-- Per-user preferences for the DealFetch dashboard.
 create table publix_user_preferences (
   user_id     uuid        primary key references auth.users(id) on delete cascade,
   categories  jsonb       default '[]'::jsonb,

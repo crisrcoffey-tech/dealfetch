@@ -4,7 +4,21 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
 <meta name="theme-color" content="#007A33" />
-<title>Publix BOGO Tracker</title>
+<title>DealFetch — Weekly Grocery Sales for Your Watchlist</title>
+<meta name="description" content="DealFetch tracks weekly sales at your favorite grocery stores and shows only the deals on items you actually buy." />
+
+<!-- Open Graph -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="DealFetch" />
+<meta property="og:title" content="DealFetch — Weekly Grocery Sales for Your Watchlist" />
+<meta property="og:description" content="DealFetch tracks weekly sales at your favorite grocery stores and shows only the deals on items you actually buy." />
+<meta property="og:url" content="https://publix-bogos-dashboard.vercel.app/" />
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="DealFetch — Weekly Grocery Sales for Your Watchlist" />
+<meta name="twitter:description" content="DealFetch tracks weekly sales at your favorite grocery stores and shows only the deals on items you actually buy." />
+
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -76,6 +90,7 @@
   }
   .brand-mark svg { width: 22px; height: 22px; }
   h1 { font-size: 22px; font-weight: 800; margin: 0; letter-spacing: -0.01em; }
+  .tagline { font-size: 13px; opacity: .85; font-weight: 500; margin-top: 1px; letter-spacing: .005em; }
   .meta { display: flex; gap: 14px; flex-wrap: wrap; font-size: 13px; opacity: .92; margin-top: 4px; }
   .meta span { display: inline-flex; align-items: center; gap: 6px; }
   .meta svg { width: 14px; height: 14px; }
@@ -630,7 +645,8 @@
             </svg>
           </div>
           <div>
-            <h1>Publix BOGO Tracker</h1>
+            <h1>DealFetch</h1>
+            <div class="tagline">Sales worth showing up for</div>
           </div>
         </div>
         <div class="meta">

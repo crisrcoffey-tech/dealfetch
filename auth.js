@@ -1,4 +1,4 @@
-// auth.js — Supabase auth wiring for the Publix BOGO dashboard.
+// auth.js — Supabase auth wiring for the DealFetch dashboard.
 // Loaded as an ES module from index.html.
 
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
