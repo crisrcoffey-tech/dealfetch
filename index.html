@@ -270,6 +270,18 @@
   .badge svg { width: 12px; height: 12px; }
   .badge.bogo { background: var(--publix-green); color: #fff; }
   .badge.save { background: var(--save); color: #fff; }
+  .badge.watchlist {
+    background: #fff7d6;
+    color: #8a5a00;
+    border: 1px solid #f3d68a;
+    text-transform: none;
+    letter-spacing: 0;
+    font-weight: 700;
+  }
+  .card.is-watchlist {
+    box-shadow: 0 0 0 2px #f3d68a, var(--shadow);
+    background: #fffcf2;
+  }
 
   .cat {
     display: inline-flex;
@@ -778,19 +790,31 @@
 
 <script>
   // ---------- Helpers ----------
-  const CATEGORIES = [
-    { key: 'all',  label: 'All',         icon: 'layout-grid', match: () => true },
-    { key: 'wine', label: 'Wine',        icon: 'wine',        match: c => c === 'Wine' },
-    { key: 'beer', label: 'Beer',        icon: 'beer',        match: c => c === 'Beer' },
-    { key: 'pork', label: 'Pork',        icon: 'beef',        match: c => /pork/i.test(c) },
-    { key: 'gf',   label: 'Gluten-Free', icon: 'wheat-off',   match: c => /gluten/i.test(c) },
-  ];
+  // Category icon hints — falls back to a generic tag when no match.
+  const CATEGORY_ICONS = {
+    'Baby': 'baby',
+    'Bakery': 'croissant',
+    'Beauty & Personal Care': 'sparkles',
+    'Beer & Wine': 'wine',
+    'Dairy': 'milk',
+    'Deli': 'sandwich',
+    'Floral': 'flower',
+    'Frozen Food': 'snowflake',
+    'Grocery': 'shopping-basket',
+    'Health & Nutrition': 'heart-pulse',
+    'Housewares': 'lamp',
+    'Meat': 'beef',
+    'Non-Foods': 'package',
+    'Pet': 'paw-print',
+    'Produce': 'apple',
+    'Seafood': 'fish',
+  };
 
   const catClassFor = (category) => {
-    if (category === 'Wine') return 'wine';
-    if (category === 'Beer') return 'beer';
-    if (/pork/i.test(category)) return 'pork';
-    if (/gluten/i.test(category)) return 'gf';
+    if (/wine|beer/i.test(category)) return 'wine';
+    if (/meat|pork/i.test(category)) return 'pork';
+    if (/produce|gluten/i.test(category)) return 'gf';
+    if (/bakery/i.test(category)) return 'beer';
     return '';
   };
 
@@ -816,10 +840,11 @@
 
   // ---------- State ----------
   let DATA = null;
-  let activeCategory = 'all';
+  let activeCategory = 'all'; // 'all' or a real category name from DATA.deals
 
   // Apply per-user preferences from preferences.js (if signed in).
   // Returns the deals array filtered down to what the user wants to see.
+  // When signed-out or no prefs set, returns deals untouched.
   function applyUserPrefs(deals) {
     const prefs = window.publixPrefs?.currentFilters?.() || null;
     if (!prefs) return deals;
@@ -843,27 +868,59 @@
     return applyUserPrefs(DATA?.deals || []);
   }
 
+  // Returns the lowercase watchlist (used to highlight matching cards).
+  function watchlistLower() {
+    const wl = window.publixPrefs?.currentFilters?.()?.watchlist || [];
+    return wl.map(w => String(w).toLowerCase()).filter(Boolean);
+  }
+  function isWatchlistMatch(deal, wl) {
+    if (!wl.length) return false;
+    const name = String(deal.name || '').toLowerCase();
+    return wl.some(w => name.includes(w));
+  }
+
   // ---------- Render ----------
   function renderChips() {
-    const chips = document.getElementById('chips');
+    const chipsEl = document.getElementById('chips');
     const deals = baseDeals();
-    chips.innerHTML = '';
-    CATEGORIES.forEach(cat => {
-      const count = deals.filter(d => cat.match(d.category)).length;
+    chipsEl.innerHTML = '';
+
+    // Tally counts for each category in the (filtered) deal set.
+    const counts = {};
+    deals.forEach(d => {
+      const c = d.category || 'Other';
+      counts[c] = (counts[c] || 0) + 1;
+    });
+    const cats = Object.keys(counts).sort();
+
+    const makeChip = (key, label, count, icon) => {
       const btn = document.createElement('button');
       btn.className = 'chip';
       btn.type = 'button';
       btn.setAttribute('role', 'tab');
-      btn.setAttribute('aria-pressed', cat.key === activeCategory ? 'true' : 'false');
-      btn.dataset.cat = cat.key;
-      btn.innerHTML = `<i data-lucide="${cat.icon}"></i>${esc(cat.label)} <span class="count">${count}</span>`;
+      btn.setAttribute('aria-pressed', key === activeCategory ? 'true' : 'false');
+      btn.dataset.cat = key;
+      btn.innerHTML = `<i data-lucide="${icon}"></i>${esc(label)} <span class="count">${count}</span>`;
       btn.addEventListener('click', () => {
-        activeCategory = cat.key;
+        activeCategory = key;
         renderChips();
         renderDeals();
       });
-      chips.appendChild(btn);
+      return btn;
+    };
+
+    chipsEl.appendChild(makeChip('all', 'All', deals.length, 'layout-grid'));
+    cats.forEach(cat => {
+      const icon = CATEGORY_ICONS[cat] || 'tag';
+      chipsEl.appendChild(makeChip(cat, cat, counts[cat], icon));
     });
+
+    // If the previously-active category no longer exists in the filtered set,
+    // fall back to 'all' so the user isn't stuck on an empty view.
+    if (activeCategory !== 'all' && !counts[activeCategory]) {
+      activeCategory = 'all';
+    }
+
     if (window.lucide) lucide.createIcons();
   }
 
@@ -872,10 +929,10 @@
     const label = document.getElementById('sectionLabel');
     const countEl = document.getElementById('visibleCount');
 
-    const cat = CATEGORIES.find(c => c.key === activeCategory);
-    label.textContent = cat.key === 'all' ? 'All Deals' : `${cat.label} Deals`;
-
-    const items = baseDeals().filter(d => cat.match(d.category));
+    const items = baseDeals().filter(d =>
+      activeCategory === 'all' ? true : d.category === activeCategory
+    );
+    label.textContent = activeCategory === 'all' ? 'All Deals' : `${activeCategory} Deals`;
     countEl.textContent = `${items.length} ${items.length === 1 ? 'item' : 'items'}`;
 
     if (items.length === 0) {
@@ -890,6 +947,8 @@
       return;
     }
 
+    const wl = watchlistLower();
+
     const grid = document.createElement('div');
     grid.className = 'grid';
 
@@ -897,14 +956,16 @@
       const bogo = isBogo(d.deal);
       const catCls = catClassFor(d.category);
       const size = extractSize(d.details);
+      const wlHit = isWatchlistMatch(d, wl);
 
       const card = document.createElement('article');
-      card.className = 'card';
+      card.className = 'card' + (wlHit ? ' is-watchlist' : '');
       card.innerHTML = `
         <div class="card-top">
           <span class="badge ${bogo ? 'bogo' : 'save'}">
             <i data-lucide="${bogo ? 'tag' : 'percent'}"></i>${bogo ? 'BOGO' : 'Sale'}
           </span>
+          ${wlHit ? `<span class="badge watchlist" title="Matches your watchlist">⭐ Watchlist</span>` : ''}
           <span class="cat ${catCls}">${esc(d.category)}</span>
         </div>
         <h3 class="name">${esc(d.name)}</h3>

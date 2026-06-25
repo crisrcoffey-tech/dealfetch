@@ -71,6 +71,10 @@ async function initAuthUI() {
 
   const session = await getSession();
   updateHeaderUI(session);
+  // Explicitly broadcast the initial session so preferences.js (and any other
+  // listeners that may have registered after onAuthStateChange's INITIAL_SESSION
+  // already fired) get a chance to react.
+  window.dispatchEvent(new CustomEvent('publix-auth-change', { detail: { session } }));
 
   // Header buttons
   $('btnSignIn')?.addEventListener('click', () => {
@@ -111,15 +115,4 @@ async function initAuthUI() {
 
 window.addEventListener('publix-auth-change', (e) => {
   updateHeaderUI(e.detail.session);
-  // If the user just signed in via magic link, close any open modal.
-  if (e.detail.session) {
-    const m = $('signInModal');
-    if (m) m.hidden = true;
-  }
-});
-
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initAuthUI);
-} else {
-  initAuthUI();
-}
+  //

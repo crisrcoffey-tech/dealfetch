@@ -84,10 +84,27 @@ function watchlistChipHtml(w) {
   return `<span class="wl-chip" data-w="${esc(w)}">${esc(w)} <button type="button" class="wl-remove" aria-label="Remove">×</button></span>`;
 }
 
-function openPrefsModal() {
-  if (!signedIn) {
+async function openPrefsModal() {
+  // Don't rely on the module-level `signedIn` flag here — it depends on the
+  // `publix-auth-change` event having fired, which races with module load
+  // order. Ask Supabase directly for the current session.
+  let session = null;
+  if (supabase) {
+    try {
+      const { data } = await supabase.auth.getSession();
+      session = data?.session || null;
+    } catch (err) {
+      console.warn('[prefs] getSession failed:', err.message);
+    }
+  }
+  if (!session?.user?.id) {
     $('signInModal').hidden = false;
     return;
+  }
+  // We have a live session — make sure our cached state is fresh.
+  if (!signedIn || current === DEFAULTS) {
+    signedIn = true;
+    try { current = await loadFor(session.user.id); } catch (_) { /* fall through */ }
   }
   const deals = dealsData();
   const cats = uniqueCategories(deals);
@@ -229,24 +246,4 @@ function initPrefsUI() {
     if (e.target.id === 'prefsModal') $('prefsModal').hidden = true;
   });
   $('btnSavePrefs')?.addEventListener('click', savePrefs);
-  $('btnClearPrefs')?.addEventListener('click', clearPrefs);
-  $('btnClearActiveFilters')?.addEventListener('click', async () => {
-    if (!supabase) return;
-    const { data } = await supabase.auth.getSession();
-    const userId = data?.session?.user?.id;
-    if (!userId) return;
-    try {
-      await saveFor(userId, { categories: [], watchlist: [], sale_types: [] });
-      current = { ...DEFAULTS };
-      window.dispatchEvent(new CustomEvent('publix-prefs-change'));
-    } catch (err) {
-      console.warn('[prefs] clear failed:', err.message);
-    }
-  });
-}
-
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initPrefsUI);
-} else {
-  initPrefsUI();
-}
+  $('b
