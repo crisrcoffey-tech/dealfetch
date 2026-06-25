@@ -115,4 +115,15 @@ async function initAuthUI() {
 
 window.addEventListener('publix-auth-change', (e) => {
   updateHeaderUI(e.detail.session);
-  //
+  // If the user just signed in via magic link, close any open modal.
+  if (e.detail.session) {
+    const m = $('signInModal');
+    if (m) m.hidden = true;
+  }
+});
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initAuthUI);
+} else {
+  initAuthUI();
+}

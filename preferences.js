@@ -246,4 +246,24 @@ function initPrefsUI() {
     if (e.target.id === 'prefsModal') $('prefsModal').hidden = true;
   });
   $('btnSavePrefs')?.addEventListener('click', savePrefs);
-  $('b
+  $('btnClearPrefs')?.addEventListener('click', clearPrefs);
+  $('btnClearActiveFilters')?.addEventListener('click', async () => {
+    if (!supabase) return;
+    const { data } = await supabase.auth.getSession();
+    const userId = data?.session?.user?.id;
+    if (!userId) return;
+    try {
+      await saveFor(userId, { categories: [], watchlist: [], sale_types: [] });
+      current = { ...DEFAULTS };
+      window.dispatchEvent(new CustomEvent('publix-prefs-change'));
+    } catch (err) {
+      console.warn('[prefs] clear failed:', err.message);
+    }
+  });
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initPrefsUI);
+} else {
+  initPrefsUI();
+}
