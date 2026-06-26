@@ -51,6 +51,7 @@
 
   * { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink); }
+  html, body { overflow-x: hidden; width: 100%; max-width: 100%; }
   body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -59,7 +60,8 @@
     padding-bottom: env(safe-area-inset-bottom, 0);
   }
 
-  .container { max-width: 1180px; margin: 0 auto; padding: 0 20px; }
+  .container { max-width: 1180px; margin: 0 auto; padding: 0 20px; width: 100%; min-width: 0; }
+  .chips-wrap, header.site, main, footer { max-width: 100%; }
 
   /* Header */
   header.site {
@@ -76,8 +78,12 @@
     align-items: flex-start;
     justify-content: space-between;
     gap: 16px;
+    flex-wrap: wrap;
+    min-width: 0;
   }
-  .brand { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
+  .header-row > div:first-child { min-width: 0; flex: 1 1 auto; }
+  .brand { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; min-width: 0; }
+  .brand > div { min-width: 0; }
   .brand-mark {
     width: 36px; height: 36px;
     background: #fff;
@@ -146,12 +152,18 @@
     gap: 8px;
     padding: 14px 0 14px;
     overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x proximity;
     scrollbar-width: none;
     -ms-overflow-style: none;
+    /* Allow chip row to scroll without forcing the page wider */
+    max-width: 100%;
   }
   .chips::-webkit-scrollbar { display: none; }
   .chip {
     flex-shrink: 0;
+    scroll-snap-align: start;
     border: 1px solid var(--line);
     background: var(--chip-bg);
     color: var(--ink-2);
@@ -226,6 +238,8 @@
     display: grid;
     gap: 16px;
     grid-template-columns: 1fr;
+    width: 100%;
+    min-width: 0;
   }
   @media (min-width: 640px) { .grid { grid-template-columns: 1fr 1fr; gap: 18px; } }
   @media (min-width: 980px) { .grid { grid-template-columns: 1fr 1fr 1fr; gap: 20px; } }
@@ -240,7 +254,11 @@
     flex-direction: column;
     box-shadow: var(--shadow);
     transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+    min-width: 0;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
   }
+  .card .name, .card .price, .card .details { overflow-wrap: break-word; word-wrap: break-word; min-width: 0; }
   .card:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(15,23,42,.05), 0 12px 24px rgba(15,23,42,.06);
@@ -631,14 +649,38 @@
   .watchlist-suggestions .suggestion:hover { background: var(--publix-green-soft); color: var(--publix-green-dark); border-color: #c7e2d2; }
 
   /* Small screen tweaks */
+  @media (max-width: 600px) {
+    .container { padding: 0 14px; }
+    .grid { grid-template-columns: 1fr; gap: 12px; }
+    .card { padding: 14px; max-width: 100%; }
+    main { padding: 16px 0 40px; }
+    .auth-area { width: 100%; justify-content: flex-end; }
+    .meta { font-size: 12px; gap: 10px; }
+    .meta span { max-width: 100%; }
+    #lastUpdated, #weekOf { overflow-wrap: anywhere; word-break: break-word; }
+    /* On mobile, wrap the filter chips into multiple rows instead of relying
+       on horizontal scrolling, which iOS Safari often cannot reach when a
+       sticky row inside a vertically-scrolling page eats touch gestures. */
+    .chips {
+      flex-wrap: wrap;
+      overflow-x: visible;
+      scroll-snap-type: none;
+      padding: 12px 0 12px;
+      row-gap: 8px;
+    }
+    .chip { flex-shrink: 0; }
+  }
   @media (max-width: 480px) {
-    .container { padding: 0 16px; }
+    .container { padding: 0 12px; }
     h1 { font-size: 19px; }
     .brand-mark { width: 32px; height: 32px; }
     header.site { padding: 18px 0 16px; }
     .chips-wrap { top: 80px; }
     .modal { padding: 24px 12px; }
     .modal-card { border-radius: 12px; }
+    .chip { padding: 7px 12px; font-size: 13px; }
+    .auth-btn { padding: 6px 10px; font-size: 12px; }
+    .auth-email { max-width: 100px; font-size: 12px; }
   }
 </style>
 </head>
