@@ -893,16 +893,21 @@
     const { categories = [], watchlist = [], sale_types = [] } = prefs;
     if (!categories.length && !watchlist.length && !sale_types.length) return deals;
 
-    const wlLower = watchlist.map(w => String(w).toLowerCase());
+    const wlLower = watchlist.map(w => String(w).toLowerCase()).filter(Boolean);
+    const hasCatSale = categories.length > 0 || sale_types.length > 0;
+    const hasWatchlist = wlLower.length > 0;
 
+    // Watchlist is OR'd with category+sale: a deal is included if it matches
+    // the category/sale-type slice OR its name matches any watchlist term.
     return deals.filter(d => {
-      if (categories.length && !categories.includes(d.category)) return false;
-      if (sale_types.length && !sale_types.includes(saleTypeOf(d.deal))) return false;
-      if (wlLower.length) {
-        const name = String(d.name || '').toLowerCase();
-        if (!wlLower.some(w => name.includes(w))) return false;
-      }
-      return true;
+      const matchesCategoryAndSale = hasCatSale
+        && (categories.length === 0 || categories.includes(d.category))
+        && (sale_types.length === 0 || sale_types.includes(saleTypeOf(d.deal)));
+
+      const name = String(d.name || '').toLowerCase();
+      const matchesWatchlist = hasWatchlist && wlLower.some(w => name.includes(w));
+
+      return matchesCategoryAndSale || matchesWatchlist;
     });
   }
 
