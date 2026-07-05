@@ -139,6 +139,86 @@
     .auth-btn { padding: 6px 10px; font-size: 12px; }
   }
 
+  /* Filter controls row (keyword + BOGO toggle) */
+  .filter-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 0 0;
+    flex-wrap: wrap;
+  }
+  .filter-controls .search-wrap {
+    position: relative;
+    flex: 1 1 260px;
+    min-width: 200px;
+  }
+  .filter-controls .search-wrap svg {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 15px;
+    height: 15px;
+    color: var(--muted);
+    pointer-events: none;
+  }
+  .filter-controls .keyword-input {
+    width: 100%;
+    font-family: inherit;
+    font-size: 14px;
+    padding: 9px 32px 9px 34px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: #fff;
+    color: var(--ink);
+    transition: border-color .15s ease, box-shadow .15s ease;
+  }
+  .filter-controls .keyword-input:focus {
+    outline: none;
+    border-color: var(--publix-green);
+    box-shadow: 0 0 0 3px var(--publix-green-soft);
+  }
+  .filter-controls .keyword-clear {
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    padding: 4px 6px;
+    line-height: 0;
+    border-radius: 6px;
+  }
+  .filter-controls .keyword-clear:hover { background: #f3f4f6; color: var(--ink); }
+  .filter-controls .keyword-clear svg { width: 14px; height: 14px; }
+  .bogo-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border: 1px solid var(--line);
+    background: #fff;
+    color: var(--ink-2);
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .15s ease, border-color .15s ease, color .15s ease;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    flex-shrink: 0;
+  }
+  .bogo-toggle:hover { background: #f7f8fa; border-color: #d6dae0; }
+  .bogo-toggle.on {
+    background: var(--publix-green);
+    color: #fff;
+    border-color: var(--publix-green);
+  }
+  .bogo-toggle input { accent-color: var(--publix-green); pointer-events: none; }
+  .bogo-toggle svg { width: 14px; height: 14px; }
+
   /* Filter chips */
   .chips-wrap {
     background: #fff;
@@ -719,20 +799,14 @@
       </div>
 
       <div class="auth-area">
-        <div id="authSignedOut">
-          <button id="btnSignIn" class="auth-btn primary" type="button">
-            <i data-lucide="log-in"></i> Sign in
-          </button>
-        </div>
-        <div id="authSignedIn" hidden style="display:flex;align-items:center;gap:8px;">
-          <span id="authUserEmail" class="auth-email" title=""></span>
-          <button id="btnPrefs" class="auth-btn" type="button" aria-label="Preferences">
-            <i data-lucide="settings"></i> Preferences
-          </button>
-          <button id="btnSignOut" class="auth-btn" type="button" aria-label="Sign out">
-            <i data-lucide="log-out"></i> Sign out
-          </button>
-        </div>
+        <span id="authUserEmail" class="auth-email" title="" hidden></span>
+        <button id="btnPrefs" class="auth-btn" type="button" aria-label="Preferences" hidden>
+          <i data-lucide="settings"></i> Preferences
+        </button>
+        <button id="btnAuthToggle" class="auth-btn primary" type="button" data-state="signed-out">
+          <i data-lucide="log-in" id="authToggleIcon"></i>
+          <span id="authToggleLabel">Sign in</span>
+        </button>
       </div>
     </div>
   </div>
@@ -740,7 +814,21 @@
 
 <div class="chips-wrap">
   <div class="container">
-    <div class="chips" id="chips" role="tablist" aria-label="Category filter"></div>
+    <div class="filter-controls">
+      <div class="search-wrap">
+        <i data-lucide="search"></i>
+        <input type="text" id="keywordInput" class="keyword-input"
+          placeholder="Search deals (name or details)…"
+          autocomplete="off" spellcheck="false" />
+        <button type="button" id="keywordClear" class="keyword-clear" aria-label="Clear search" hidden>
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+      <button type="button" id="bogoToggle" class="bogo-toggle" role="switch" aria-checked="false">
+        <i data-lucide="tag"></i> BOGO only
+      </button>
+    </div>
+    <div class="chips" id="chips" role="group" aria-label="Category filter (multi-select)"></div>
   </div>
 </div>
 
@@ -814,17 +902,7 @@
       </button>
     </div>
     <div class="modal-body">
-      <p class="pref-help">Leave a section empty to show everything in that dimension. Filters apply to the deals list below; the category chips at the top still work as a second-level filter.</p>
-
-      <div class="pref-section">
-        <h4>Categories</h4>
-        <div class="pref-checks" id="prefCategories"></div>
-      </div>
-
-      <div class="pref-section">
-        <h4>Sale type</h4>
-        <div class="pref-checks" id="prefSaleTypes"></div>
-      </div>
+      <p class="pref-help">Watchlist items are highlighted with a star when they go on sale. Category, keyword, and BOGO filters are controlled directly from the toolbar above.</p>
 
       <div class="pref-section">
         <h4>Watchlist</h4>
@@ -891,37 +969,83 @@
 
   // ---------- State ----------
   let DATA = null;
-  let activeCategory = 'all'; // 'all' or a real category name from DATA.deals
+  // Multi-select set of category names. Empty = "All" (no category filter).
+  let activeCategories = new Set();
+  // Free-text keyword substring against name + details, case-insensitive.
+  let activeKeyword = '';
+  // BOGO-only toggle (independent of category chips).
+  let activeBogo = false;
+  // Debounce handle for keyword persistence.
+  let _kwSaveTimer = null;
 
-  // Apply per-user preferences from preferences.js (if signed in).
-  // Returns the deals array filtered down to what the user wants to see.
-  // When signed-out or no prefs set, returns deals untouched.
-  function applyUserPrefs(deals) {
+  // Sync UI-owned filter state FROM the persisted prefs (called after auth /
+  // prefs change). Signed-out users see empty defaults; signed-in users see
+  // whatever they last saved. Watchlist stays in prefs.js.
+  function syncFiltersFromPrefs() {
     const prefs = window.publixPrefs?.currentFilters?.() || null;
-    if (!prefs) return deals;
-    const { categories = [], watchlist = [], sale_types = [] } = prefs;
-    if (!categories.length && !watchlist.length && !sale_types.length) return deals;
+    if (!prefs) {
+      activeCategories = new Set();
+      activeKeyword = '';
+      activeBogo = false;
+    } else {
+      activeCategories = new Set(Array.isArray(prefs.categories) ? prefs.categories : []);
+      activeKeyword = String(prefs.keyword || '');
+      activeBogo = !!prefs.bogo_only;
+    }
+    // Reflect into the UI controls if they exist.
+    const kwInput = document.getElementById('keywordInput');
+    if (kwInput) {
+      kwInput.value = activeKeyword;
+      const clr = document.getElementById('keywordClear');
+      if (clr) clr.hidden = !activeKeyword;
+    }
+    const bogoBtn = document.getElementById('bogoToggle');
+    if (bogoBtn) {
+      bogoBtn.classList.toggle('on', activeBogo);
+      bogoBtn.setAttribute('aria-checked', activeBogo ? 'true' : 'false');
+    }
+  }
+  window.publixSyncFiltersFromPrefs = syncFiltersFromPrefs;
 
-    const wlLower = watchlist.map(w => String(w).toLowerCase()).filter(Boolean);
-    const hasCatSale = categories.length > 0 || sale_types.length > 0;
+  // Deals list with all NON-category filters applied (keyword, BOGO, watchlist
+  // OR-inclusion). Used both to tally chip counts and as the base for the
+  // category filter. Excluding categories here keeps chip counts stable as
+  // the user toggles category chips.
+  function preFilterDeals() {
+    const deals = DATA?.deals || [];
+    const kw = activeKeyword.trim().toLowerCase();
+    // Watchlist stays as an OR-inclusion signal for signed-in users, matching
+    // the pre-Phase-1 behavior.
+    const prefs = window.publixPrefs?.currentFilters?.() || null;
+    const wlLower = (prefs?.watchlist || []).map(w => String(w).toLowerCase()).filter(Boolean);
     const hasWatchlist = wlLower.length > 0;
 
-    // Watchlist is OR'd with category+sale: a deal is included if it matches
-    // the category/sale-type slice OR its name matches any watchlist term.
     return deals.filter(d => {
-      const matchesCategoryAndSale = hasCatSale
-        && (categories.length === 0 || categories.includes(d.category))
-        && (sale_types.length === 0 || sale_types.includes(saleTypeOf(d.deal)));
+      // matchesKeyword: substring against name + details, case-insensitive
+      const matchesKeyword = !kw
+        || (String(d.name || '') + ' ' + String(d.details || '')).toLowerCase().includes(kw);
+      // matchesBogo: independent BOGO toggle. Deals with deal==="BOGO" or
+      // category==="BOGO" (Publix ad section) both count as BOGO.
+      const matchesBogo = !activeBogo
+        || d.deal === 'BOGO'
+        || d.category === 'BOGO'
+        || /buy\s*1\s*get\s*1\s*free/i.test(d.deal || '');
 
+      // Watchlist OR-inclusion: a deal is force-included if it matches the
+      // watchlist, even if other filters would drop it. Only applies when
+      // signed in and watchlist is non-empty.
       const name = String(d.name || '').toLowerCase();
       const matchesWatchlist = hasWatchlist && wlLower.some(w => name.includes(w));
 
-      return matchesCategoryAndSale || matchesWatchlist;
+      return matchesWatchlist || (matchesKeyword && matchesBogo);
     });
   }
 
-  function baseDeals() {
-    return applyUserPrefs(DATA?.deals || []);
+  // Deals list after applying every filter — used by the grid.
+  function filteredDeals() {
+    const pre = preFilterDeals();
+    if (activeCategories.size === 0) return pre;
+    return pre.filter(d => activeCategories.has(d.category));
   }
 
   // Returns the lowercase watchlist (used to highlight matching cards).
@@ -938,46 +1062,67 @@
   // ---------- Render ----------
   function renderChips() {
     const chipsEl = document.getElementById('chips');
-    const deals = baseDeals();
+    // Chip counts are based on the pre-category filter set, so they stay
+    // stable as the user toggles chips on and off.
+    const pre = preFilterDeals();
     chipsEl.innerHTML = '';
 
-    // Tally counts for each category in the (filtered) deal set.
     const counts = {};
-    deals.forEach(d => {
+    pre.forEach(d => {
       const c = d.category || 'Other';
+      // BOGO is now handled by the separate BOGO toggle; hide it from the
+      // category chip row.
+      if (c === 'BOGO') return;
       counts[c] = (counts[c] || 0) + 1;
     });
     const cats = Object.keys(counts).sort();
 
-    const makeChip = (key, label, count, icon) => {
+    // "All" chip: shows when no categories are selected, clears the selection
+    // when clicked.
+    const allBtn = document.createElement('button');
+    allBtn.className = 'chip';
+    allBtn.type = 'button';
+    allBtn.setAttribute('aria-pressed', activeCategories.size === 0 ? 'true' : 'false');
+    allBtn.dataset.cat = '__all__';
+    allBtn.innerHTML = `<i data-lucide="layout-grid"></i>All <span class="count">${pre.length}</span>`;
+    allBtn.addEventListener('click', () => {
+      activeCategories.clear();
+      persistCategories();
+      renderChips();
+      renderDeals();
+    });
+    chipsEl.appendChild(allBtn);
+
+    cats.forEach(cat => {
+      const icon = CATEGORY_ICONS[cat] || 'tag';
       const btn = document.createElement('button');
       btn.className = 'chip';
       btn.type = 'button';
-      btn.setAttribute('role', 'tab');
-      btn.setAttribute('aria-pressed', key === activeCategory ? 'true' : 'false');
-      btn.dataset.cat = key;
-      btn.innerHTML = `<i data-lucide="${icon}"></i>${esc(label)} <span class="count">${count}</span>`;
+      btn.setAttribute('aria-pressed', activeCategories.has(cat) ? 'true' : 'false');
+      btn.dataset.cat = cat;
+      btn.innerHTML = `<i data-lucide="${icon}"></i>${esc(cat)} <span class="count">${counts[cat]}</span>`;
       btn.addEventListener('click', () => {
-        activeCategory = key;
+        // Multi-select: toggle this chip independently of others.
+        if (activeCategories.has(cat)) activeCategories.delete(cat);
+        else activeCategories.add(cat);
+        persistCategories();
         renderChips();
         renderDeals();
       });
-      return btn;
-    };
-
-    chipsEl.appendChild(makeChip('all', 'All', deals.length, 'layout-grid'));
-    cats.forEach(cat => {
-      const icon = CATEGORY_ICONS[cat] || 'tag';
-      chipsEl.appendChild(makeChip(cat, cat, counts[cat], icon));
+      chipsEl.appendChild(btn);
     });
 
-    // If the previously-active category no longer exists in the filtered set,
-    // fall back to 'all' so the user isn't stuck on an empty view.
-    if (activeCategory !== 'all' && !counts[activeCategory]) {
-      activeCategory = 'all';
+    // Prune any stored selections that no longer exist in the current deal set
+    // (e.g. a category disappears in next week's data).
+    for (const cat of Array.from(activeCategories)) {
+      if (!counts[cat]) activeCategories.delete(cat);
     }
 
     if (window.lucide) lucide.createIcons();
+  }
+
+  function persistCategories() {
+    window.publixPrefs?.setCategories?.([...activeCategories]);
   }
 
   function renderDeals() {
@@ -985,10 +1130,14 @@
     const label = document.getElementById('sectionLabel');
     const countEl = document.getElementById('visibleCount');
 
-    const items = baseDeals().filter(d =>
-      activeCategory === 'all' ? true : d.category === activeCategory
-    );
-    label.textContent = activeCategory === 'all' ? 'All Deals' : `${activeCategory} Deals`;
+    const items = filteredDeals();
+    if (activeCategories.size === 0) {
+      label.textContent = activeBogo ? 'BOGO Deals' : 'All Deals';
+    } else if (activeCategories.size === 1) {
+      label.textContent = `${[...activeCategories][0]} Deals`;
+    } else {
+      label.textContent = `${activeCategories.size} Categories`;
+    }
     countEl.textContent = `${items.length} ${items.length === 1 ? 'item' : 'items'}`;
 
     if (items.length === 0) {
@@ -1050,12 +1199,15 @@
     const text = document.getElementById('filterPillText');
     if (!wrap || !text) return;
     const prefs = window.publixPrefs?.currentFilters?.() || null;
-    const active = window.publixPrefs?.isActive?.() || false;
-    if (!active || !prefs) { wrap.hidden = true; return; }
     const parts = [];
-    if (prefs.categories?.length) parts.push(`${prefs.categories.length} categor${prefs.categories.length === 1 ? 'y' : 'ies'}`);
-    if (prefs.watchlist?.length)  parts.push(`${prefs.watchlist.length} watchlist item${prefs.watchlist.length === 1 ? '' : 's'}`);
-    if (prefs.sale_types?.length) parts.push(`${prefs.sale_types.length} sale type${prefs.sale_types.length === 1 ? '' : 's'}`);
+    if (activeCategories.size)
+      parts.push(`${activeCategories.size} categor${activeCategories.size === 1 ? 'y' : 'ies'}`);
+    if (activeBogo) parts.push('BOGO only');
+    if (activeKeyword.trim())
+      parts.push(`"${activeKeyword.trim().slice(0, 24)}${activeKeyword.trim().length > 24 ? '…' : ''}"`);
+    if (prefs?.watchlist?.length)
+      parts.push(`${prefs.watchlist.length} watchlist item${prefs.watchlist.length === 1 ? '' : 's'}`);
+    if (!parts.length) { wrap.hidden = true; return; }
     text.textContent = 'Filtering by: ' + parts.join(', ');
     wrap.hidden = false;
     if (window.lucide) lucide.createIcons();
@@ -1090,12 +1242,79 @@
 
   function rerenderAll() {
     if (!DATA) return;
+    syncFiltersFromPrefs();
     renderFilterPill();
     renderChips();
     renderDeals();
   }
   // Exposed so auth.js / preferences.js can trigger re-render on state changes.
   window.publixRerender = rerenderAll;
+  // Called by preferences.js when the user hits "Clear all filters" — reset
+  // the UI-owned filter state too.
+  window.publixResetActiveCategory = function () {
+    activeCategories = new Set();
+    activeKeyword = '';
+    activeBogo = false;
+    const kwInput = document.getElementById('keywordInput');
+    if (kwInput) kwInput.value = '';
+    const clr = document.getElementById('keywordClear');
+    if (clr) clr.hidden = true;
+    const bogoBtn = document.getElementById('bogoToggle');
+    if (bogoBtn) {
+      bogoBtn.classList.remove('on');
+      bogoBtn.setAttribute('aria-checked', 'false');
+    }
+  };
+
+  // ---------- Wire keyword input + BOGO toggle ----------
+  function wireFilterControls() {
+    const kwInput = document.getElementById('keywordInput');
+    const kwClear = document.getElementById('keywordClear');
+    const bogoBtn = document.getElementById('bogoToggle');
+
+    if (kwInput) {
+      // Live filter as they type; debounce persistence to Supabase.
+      kwInput.addEventListener('input', () => {
+        activeKeyword = kwInput.value;
+        if (kwClear) kwClear.hidden = !activeKeyword;
+        renderChips();
+        renderDeals();
+        renderFilterPill();
+        clearTimeout(_kwSaveTimer);
+        _kwSaveTimer = setTimeout(() => {
+          window.publixPrefs?.setKeyword?.(activeKeyword);
+        }, 400);
+      });
+      // Also save immediately on blur so we don't lose a keyword the user
+      // typed and then walked away from before debounce fired.
+      kwInput.addEventListener('blur', () => {
+        clearTimeout(_kwSaveTimer);
+        window.publixPrefs?.setKeyword?.(activeKeyword);
+      });
+    }
+    if (kwClear) {
+      kwClear.addEventListener('click', () => {
+        activeKeyword = '';
+        if (kwInput) kwInput.value = '';
+        kwClear.hidden = true;
+        renderChips();
+        renderDeals();
+        renderFilterPill();
+        window.publixPrefs?.setKeyword?.('');
+      });
+    }
+    if (bogoBtn) {
+      bogoBtn.addEventListener('click', () => {
+        activeBogo = !activeBogo;
+        bogoBtn.classList.toggle('on', activeBogo);
+        bogoBtn.setAttribute('aria-checked', activeBogo ? 'true' : 'false');
+        renderChips();
+        renderDeals();
+        renderFilterPill();
+        window.publixPrefs?.setBogo?.(activeBogo);
+      });
+    }
+  }
 
   // ---------- Boot ----------
   async function init() {
@@ -1117,6 +1336,7 @@
   // Initialize lucide icons that exist on first paint (header)
   document.addEventListener('DOMContentLoaded', () => {
     if (window.lucide) lucide.createIcons();
+    wireFilterControls();
     init();
   });
 

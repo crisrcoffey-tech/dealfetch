@@ -18,6 +18,14 @@ export const supabase = configured
 window.supabaseClient = supabase;
 window.supabaseConfigured = configured;
 
+// Long-lived auth state, updated by onAuthStateChange and the initial getSession().
+// Other modules read this synchronously instead of awaiting getSession() on every
+// click — that avoids race conditions where iOS Safari hasn't persisted the
+// localStorage session yet but the in-memory user is already known.
+let _currentUser = null;
+export function getCurrentUser() { return _currentUser; }
+window.dealfetchAuth = { getCurrentUser };
+
 export async function getSession() {
   if (!supabase) return null;
   const { data } = await supabase.auth.getSession();
@@ -39,7 +47,9 @@ export async function signOut() {
 
 // Broadcast auth changes so preferences.js and the render code can react.
 if (supabase) {
-  supabase.auth.onAuthStateChange((_event, session) => {
+  supabase.auth.onAuthStateChange((event, session) => {
+    _currentUser = session?.user || null;
+    console.log('[auth] state change:', event, 'user:', _currentUser?.email || null);
     window.dispatchEvent(new CustomEvent('publix-auth-change', { detail: { session } }));
   });
 }
@@ -48,18 +58,37 @@ if (supabase) {
 function $(id) { return document.getElementById(id); }
 
 function updateHeaderUI(session) {
-  const signedOut = $('authSignedOut');
-  const signedIn = $('authSignedIn');
+  const toggleBtn = $('btnAuthToggle');
+  const toggleLabel = $('authToggleLabel');
+  const toggleIcon = $('authToggleIcon');
   const userEmail = $('authUserEmail');
-  if (!signedOut || !signedIn) return;
+  const prefsBtn = $('btnPrefs');
+  if (!toggleBtn) return;
   if (session && session.user) {
-    signedOut.hidden = true;
-    signedIn.hidden = false;
-    if (userEmail) userEmail.textContent = session.user.email || '';
+    toggleBtn.dataset.state = 'signed-in';
+    toggleBtn.classList.remove('primary');
+    toggleBtn.setAttribute('aria-label', 'Sign out');
+    if (toggleLabel) toggleLabel.textContent = 'Sign out';
+    if (toggleIcon) toggleIcon.setAttribute('data-lucide', 'log-out');
+    if (userEmail) {
+      userEmail.textContent = session.user.email || '';
+      userEmail.title = session.user.email || '';
+      userEmail.hidden = false;
+    }
+    if (prefsBtn) prefsBtn.hidden = false;
   } else {
-    signedOut.hidden = false;
-    signedIn.hidden = true;
+    toggleBtn.dataset.state = 'signed-out';
+    toggleBtn.classList.add('primary');
+    toggleBtn.setAttribute('aria-label', 'Sign in');
+    if (toggleLabel) toggleLabel.textContent = 'Sign in';
+    if (toggleIcon) toggleIcon.setAttribute('data-lucide', 'log-in');
+    if (userEmail) {
+      userEmail.textContent = '';
+      userEmail.hidden = true;
+    }
+    if (prefsBtn) prefsBtn.hidden = true;
   }
+  if (window.lucide) lucide.createIcons();
 }
 
 async function initAuthUI() {
@@ -70,23 +99,26 @@ async function initAuthUI() {
   }
 
   const session = await getSession();
+  _currentUser = session?.user || null;
   updateHeaderUI(session);
   // Explicitly broadcast the initial session so preferences.js (and any other
   // listeners that may have registered after onAuthStateChange's INITIAL_SESSION
   // already fired) get a chance to react.
   window.dispatchEvent(new CustomEvent('publix-auth-change', { detail: { session } }));
 
-  // Header buttons
-  $('btnSignIn')?.addEventListener('click', () => {
-    const m = $('signInModal');
-    if (m) { m.hidden = false; $('signInEmail')?.focus(); }
+  // Single toggle button — routes to sign-in modal or sign-out based on state.
+  $('btnAuthToggle')?.addEventListener('click', async () => {
+    const btn = $('btnAuthToggle');
+    if (btn?.dataset.state === 'signed-in') {
+      await signOut();
+    } else {
+      const m = $('signInModal');
+      if (m) { m.hidden = false; $('signInEmail')?.focus(); }
+    }
   });
   $('btnCloseSignIn')?.addEventListener('click', () => { $('signInModal').hidden = true; });
   $('signInModal')?.addEventListener('click', (e) => {
     if (e.target.id === 'signInModal') $('signInModal').hidden = true;
-  });
-  $('btnSignOut')?.addEventListener('click', async () => {
-    await signOut();
   });
 
   // Magic link form

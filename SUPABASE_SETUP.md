@@ -56,6 +56,8 @@ create table user_preferences (
   watchlist   jsonb       default '[]'::jsonb,
   sale_types  jsonb       default '[]'::jsonb,
   store_ids   jsonb       default '[]'::jsonb,
+  keyword     text        default '',
+  bogo_only   boolean     default false,
   updated_at  timestamptz default now()
 );
 
@@ -77,6 +79,21 @@ create policy "Users can update own preferences"
 
 The `store_ids` column is reserved for the upcoming multi-store feature; the
 client does not read or write it yet, so it stays at its `[]` default.
+
+### Migration for existing installs (July 2026)
+
+If the table already exists from before the `keyword` / `bogo_only` columns
+were added, run this once in the SQL Editor:
+
+```sql
+alter table user_preferences
+  add column if not exists keyword   text    default '',
+  add column if not exists bogo_only boolean default false;
+```
+
+The client falls back gracefully (keyword/BOGO stay in-memory only for that
+session) if the migration hasn't been applied, but persistence won't work
+until it is.
 
 That's the full schema. There are no deny policies — RLS itself denies by
 default; the three policies above are the only ways anyone can touch the

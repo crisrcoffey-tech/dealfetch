@@ -1,13 +1,28 @@
 // preferences.js — Per-user filter preferences synced to Supabase.
 // Loaded as an ES module from index.html.
 
-import { supabase } from './auth.js';
+import { supabase, getCurrentUser } from './auth.js';
 
 const TABLE = 'user_preferences';
-const DEFAULTS = Object.freeze({ categories: [], watchlist: [], sale_types: [] });
+const DEFAULTS = Object.freeze({
+  categories: [],
+  watchlist: [],
+  sale_types: [],
+  keyword: '',
+  bogo_only: false,
+});
 
 let current = { ...DEFAULTS };
 let signedIn = false;
+// Mirror of the auth state, kept in sync via publix-auth-change. Lets us decide
+// "are we signed in?" synchronously when the user taps Preferences — no race
+// against Supabase's async getSession() / localStorage write.
+let currentUser = null;
+// Some deployments haven't yet migrated to include the keyword / bogo_only
+// columns. We detect this on first load and fall back to in-memory only so
+// the UI stays functional either way.
+let hasKeywordCol = true;
+let hasBogoCol = true;
 
 export function currentFilters() {
   return current;
@@ -17,17 +32,33 @@ export function isActive() {
   return signedIn && (
     (current.categories?.length || 0) > 0 ||
     (current.watchlist?.length || 0) > 0 ||
-    (current.sale_types?.length || 0) > 0
+    (current.sale_types?.length || 0) > 0 ||
+    !!current.keyword ||
+    !!current.bogo_only
   );
 }
 
 async function loadFor(userId) {
   if (!supabase) return { ...DEFAULTS };
-  const { data, error } = await supabase
+  // Try the full column set first; if the migration hasn't been applied,
+  // fall back to the legacy columns.
+  let { data, error } = await supabase
     .from(TABLE)
-    .select('categories, watchlist, sale_types')
+    .select('categories, watchlist, sale_types, keyword, bogo_only')
     .eq('user_id', userId)
     .maybeSingle();
+  if (error && /column .* does not exist|keyword|bogo_only/i.test(error.message || '')) {
+    console.warn('[prefs] keyword/bogo_only columns missing — run the migration in SUPABASE_SETUP.md.');
+    hasKeywordCol = false;
+    hasBogoCol = false;
+    const legacy = await supabase
+      .from(TABLE)
+      .select('categories, watchlist, sale_types')
+      .eq('user_id', userId)
+      .maybeSingle();
+    data = legacy.data;
+    error = legacy.error;
+  }
   if (error) {
     console.warn('[prefs] load error:', error.message);
     return { ...DEFAULTS };
@@ -37,21 +68,71 @@ async function loadFor(userId) {
     categories: Array.isArray(data.categories) ? data.categories : [],
     watchlist: Array.isArray(data.watchlist) ? data.watchlist : [],
     sale_types: Array.isArray(data.sale_types) ? data.sale_types : [],
+    keyword: typeof data.keyword === 'string' ? data.keyword : '',
+    bogo_only: !!data.bogo_only,
   };
 }
 
 async function saveFor(userId, prefs) {
   if (!supabase) throw new Error('Supabase not configured');
+  const row = {
+    user_id: userId,
+    categories: prefs.categories,
+    watchlist: prefs.watchlist,
+    sale_types: prefs.sale_types,
+    updated_at: new Date().toISOString(),
+  };
+  if (hasKeywordCol) row.keyword = prefs.keyword || '';
+  if (hasBogoCol) row.bogo_only = !!prefs.bogo_only;
   const { error } = await supabase
     .from(TABLE)
-    .upsert({
-      user_id: userId,
-      categories: prefs.categories,
-      watchlist: prefs.watchlist,
-      sale_types: prefs.sale_types,
-      updated_at: new Date().toISOString(),
-    }, { onConflict: 'user_id' });
-  if (error) throw error;
+    .upsert(row, { onConflict: 'user_id' });
+  if (error) {
+    // If the extra columns are missing, retry once without them.
+    if (/column .* does not exist|keyword|bogo_only/i.test(error.message || '')) {
+      hasKeywordCol = false;
+      hasBogoCol = false;
+      const { error: e2 } = await supabase.from(TABLE).upsert({
+        user_id: userId,
+        categories: prefs.categories,
+        watchlist: prefs.watchlist,
+        sale_types: prefs.sale_types,
+        updated_at: new Date().toISOString(),
+      }, { onConflict: 'user_id' });
+      if (e2) throw e2;
+      return;
+    }
+    throw error;
+  }
+}
+
+// ---------- Setters used by the render script ----------
+// These update `current` optimistically and debounce persistence.
+let _saveTimer = null;
+function scheduleSave() {
+  clearTimeout(_saveTimer);
+  const user = currentUser || (typeof getCurrentUser === 'function' ? getCurrentUser() : null);
+  if (!user?.id) return; // signed out — no persistence
+  const userId = user.id;
+  const snapshot = { ...current };
+  _saveTimer = setTimeout(() => {
+    saveFor(userId, snapshot).catch(err => {
+      console.warn('[prefs] save failed:', err.message);
+    });
+  }, 250);
+}
+
+export function setCategories(arr) {
+  current = { ...current, categories: Array.isArray(arr) ? [...arr] : [] };
+  scheduleSave();
+}
+export function setKeyword(kw) {
+  current = { ...current, keyword: String(kw || '') };
+  scheduleSave();
+}
+export function setBogo(on) {
+  current = { ...current, bogo_only: !!on };
+  scheduleSave();
 }
 
 // ---------- Helpers for modal population ----------
@@ -85,47 +166,33 @@ function watchlistChipHtml(w) {
 }
 
 async function openPrefsModal() {
-  // Don't rely on the module-level `signedIn` flag here — it depends on the
-  // `publix-auth-change` event having fired, which races with module load
-  // order. Ask Supabase directly for the current session.
-  let session = null;
-  if (supabase) {
+  // Resolve the live user from (in order of confidence):
+  //   1. our local `currentUser` mirror (updated by publix-auth-change)
+  //   2. auth.js getCurrentUser() (same source, double-check)
+  //   3. a fresh supabase.auth.getSession() as a last resort
+  // This avoids the race where iOS Safari hasn't finished persisting the
+  // session to localStorage yet but the in-memory user is already known.
+  let user = currentUser || (typeof getCurrentUser === 'function' ? getCurrentUser() : null);
+  if (!user && supabase) {
     try {
       const { data } = await supabase.auth.getSession();
-      session = data?.session || null;
+      user = data?.session?.user || null;
     } catch (err) {
       console.warn('[prefs] getSession failed:', err.message);
     }
   }
-  if (!session?.user?.id) {
+  console.log('preferences click, user:', user?.email || null);
+  if (!user?.id) {
     $('signInModal').hidden = false;
     return;
   }
-  // We have a live session — make sure our cached state is fresh.
+  // We have a live user — make sure our cached state is fresh.
   if (!signedIn || current === DEFAULTS) {
     signedIn = true;
-    try { current = await loadFor(session.user.id); } catch (_) { /* fall through */ }
+    try { current = await loadFor(user.id); } catch (_) { /* fall through */ }
   }
   const deals = dealsData();
-  const cats = uniqueCategories(deals);
   const names = uniqueNames(deals);
-  const types = detectSaleTypes(deals);
-
-  const catsEl = $('prefCategories');
-  catsEl.innerHTML = cats.length
-    ? cats.map(c => `
-        <label class="pref-check">
-          <input type="checkbox" value="${esc(c)}" ${current.categories.includes(c) ? 'checked' : ''}/>
-          <span>${esc(c)}</span>
-        </label>`).join('')
-    : '<em class="pref-help">No categories available yet — try again after the next refresh.</em>';
-
-  const typesEl = $('prefSaleTypes');
-  typesEl.innerHTML = types.map(t => `
-    <label class="pref-check">
-      <input type="checkbox" value="${esc(t)}" ${current.sale_types.includes(t) ? 'checked' : ''}/>
-      <span>${esc(t)}</span>
-    </label>`).join('');
 
   const wlEl = $('prefWatchlist');
   wlEl.innerHTML = `
@@ -185,10 +252,16 @@ function alreadyInChips(value) {
 }
 
 function readPrefsFromModal() {
-  const categories = [...document.querySelectorAll('#prefCategories input:checked')].map(i => i.value);
-  const sale_types = [...document.querySelectorAll('#prefSaleTypes input:checked')].map(i => i.value);
   const watchlist = [...document.querySelectorAll('#watchlistChips .wl-chip')].map(c => c.dataset.w);
-  return { categories, watchlist, sale_types };
+  // Keep whatever is currently in `current` for the fields not exposed in the
+  // modal — they're managed by the toolbar controls directly.
+  return {
+    categories: current.categories || [],
+    sale_types: current.sale_types || [],
+    keyword: current.keyword || '',
+    bogo_only: !!current.bogo_only,
+    watchlist,
+  };
 }
 
 async function savePrefs() {
@@ -216,8 +289,6 @@ async function savePrefs() {
 }
 
 function clearPrefs() {
-  document.querySelectorAll('#prefCategories input').forEach(i => { i.checked = false; });
-  document.querySelectorAll('#prefSaleTypes input').forEach(i => { i.checked = false; });
   const chips = $('watchlistChips');
   if (chips) chips.innerHTML = '';
 }
@@ -227,16 +298,24 @@ window.addEventListener('publix-auth-change', async (e) => {
   const session = e.detail.session;
   if (session?.user?.id) {
     signedIn = true;
+    currentUser = session.user;
     current = await loadFor(session.user.id);
   } else {
     signedIn = false;
+    currentUser = null;
     current = { ...DEFAULTS };
   }
   window.dispatchEvent(new CustomEvent('publix-prefs-change'));
 });
 
 // Expose to inline render script
-window.publixPrefs = { currentFilters, isActive };
+window.publixPrefs = {
+  currentFilters,
+  isActive,
+  setCategories,
+  setKeyword,
+  setBogo,
+};
 
 // Wire modal buttons
 function initPrefsUI() {
@@ -248,16 +327,32 @@ function initPrefsUI() {
   $('btnSavePrefs')?.addEventListener('click', savePrefs);
   $('btnClearPrefs')?.addEventListener('click', clearPrefs);
   $('btnClearActiveFilters')?.addEventListener('click', async () => {
-    if (!supabase) return;
-    const { data } = await supabase.auth.getSession();
-    const userId = data?.session?.user?.id;
+    console.log('[prefs] clear active filters clicked');
+    // Optimistically clear local state so the UI updates immediately, even
+    // if the user is signed out or the network is slow.
+    current = { ...DEFAULTS };
+    // Also reset the category chip selection on the inline render side so
+    // the "All" chip becomes active again.
+    if (typeof window.publixResetActiveCategory === 'function') {
+      window.publixResetActiveCategory();
+    }
+    window.dispatchEvent(new CustomEvent('publix-prefs-change'));
+    // Persist to Supabase if signed in. We pull the user from the cached
+    // mirror first (avoids the localStorage race on iOS), then fall back.
+    const user = currentUser
+      || (typeof getCurrentUser === 'function' ? getCurrentUser() : null);
+    let userId = user?.id;
+    if (!userId && supabase) {
+      try {
+        const { data } = await supabase.auth.getSession();
+        userId = data?.session?.user?.id;
+      } catch (_) { /* ignore */ }
+    }
     if (!userId) return;
     try {
-      await saveFor(userId, { categories: [], watchlist: [], sale_types: [] });
-      current = { ...DEFAULTS };
-      window.dispatchEvent(new CustomEvent('publix-prefs-change'));
+      await saveFor(userId, { categories: [], watchlist: [], sale_types: [], keyword: '', bogo_only: false });
     } catch (err) {
-      console.warn('[prefs] clear failed:', err.message);
+      console.warn('[prefs] clear save failed:', err.message);
     }
   });
 }
