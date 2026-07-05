@@ -50,6 +50,9 @@
   }
 
   * { box-sizing: border-box; }
+  /* The default UA rule for [hidden] is display:none, but a class that sets
+     display (like .auth-btn: inline-flex) overrides it. Force [hidden] to win. */
+  [hidden] { display: none !important; }
   html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink); }
   html, body { overflow-x: hidden; width: 100%; max-width: 100%; }
   body {
@@ -968,12 +971,4 @@
     init();
   });
 
-  window.addEventListener('publix-prefs-change', rerenderAll);
-  window.addEventListener('publix-auth-change', rerenderAll);
-</script>
-
-<script type="module" src="auth.js"></script>
-<script type="module" src="preferences.js"></script>
-
-</body>
-</html>
+  window.addEventListener('publix-prefs-change', re
