@@ -1114,10 +1114,14 @@
       chipsEl.appendChild(btn);
     });
 
-    // Prune any stored selections that no longer exist in the current deal set
-    // (e.g. a category disappears in next week's data).
+    // Prune stored selections that no longer exist in the RAW deal set
+    // (e.g. a category disappears in next week's data). Do NOT prune
+    // categories that happen to have 0 items after the current keyword /
+    // BOGO filters — the user still wants them selected; they'll reappear
+    // when those filters relax.
+    const allRealCategories = new Set((DATA?.deals || []).map(d => d.category).filter(Boolean));
     for (const cat of Array.from(activeCategories)) {
-      if (!counts[cat]) activeCategories.delete(cat);
+      if (!allRealCategories.has(cat)) activeCategories.delete(cat);
     }
 
     if (window.lucide) lucide.createIcons();
@@ -1343,11 +1347,4 @@
   });
 
   // Re-render when prefs or auth state change
-  window.addEventListener('publix-prefs-change', rerenderAll);
-  window.addEventListener('publix-auth-change', rerenderAll);
-</script>
-
-<!-- Supabase auth + preferences (ES modules, load after the inline render script
-     so window.publixRerender exists when they dispatch their first events). -->
-<script type="module" src="auth.js"></script>
-<script type="mo
+  window.addEventListener('publix-prefs-change', rerenderAll
