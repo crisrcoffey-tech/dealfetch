@@ -268,9 +268,10 @@
   .card-top {
     display: flex;
     align-items: flex-start;
-    justify-content: space-between;
-    gap: 10px;
+    justify-content: flex-start;
+    gap: 6px;
     margin-bottom: 10px;
+    flex-wrap: wrap;
   }
 
   .badge {
@@ -292,6 +293,14 @@
     background: #fff7d6;
     color: #8a5a00;
     border: 1px solid #f3d68a;
+    text-transform: none;
+    letter-spacing: 0;
+    font-weight: 700;
+  }
+  .badge.store {
+    background: var(--publix-green-soft);
+    color: var(--publix-green-dark);
+    border: 1px solid #c7e2d2;
     text-transform: none;
     letter-spacing: 0;
     font-weight: 700;
@@ -1012,6 +1021,7 @@
           <span class="badge ${bogo ? 'bogo' : 'save'}">
             <i data-lucide="${bogo ? 'tag' : 'percent'}"></i>${bogo ? 'BOGO' : 'Sale'}
           </span>
+          ${d.store ? `<span class="badge store" title="Store"><i data-lucide="store"></i>${esc(d.store)}</span>` : ''}
           ${wlHit ? `<span class="badge watchlist" title="Matches your watchlist">⭐ Watchlist</span>` : ''}
           <span class="cat ${catCls}">${esc(d.category)}</span>
         </div>
@@ -1090,7 +1100,9 @@
   // ---------- Boot ----------
   async function init() {
     try {
-      const res = await fetch('./publix_deals.json', { cache: 'no-store' });
+      // Try new multi-store schema first; fall back to legacy single-store file.
+      let res = await fetch('./deals.json', { cache: 'no-store' });
+      if (!res.ok) res = await fetch('./publix_deals.json', { cache: 'no-store' });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       DATA = await res.json();
       window.PUBLIX_DATA = DATA;
@@ -1104,19 +1116,4 @@
 
   // Initialize lucide icons that exist on first paint (header)
   document.addEventListener('DOMContentLoaded', () => {
-    if (window.lucide) lucide.createIcons();
-    init();
-  });
-
-  // Re-render when prefs or auth state change
-  window.addEventListener('publix-prefs-change', rerenderAll);
-  window.addEventListener('publix-auth-change', rerenderAll);
-</script>
-
-<!-- Supabase auth + preferences (ES modules, load after the inline render script
-     so window.publixRerender exists when they dispatch their first events). -->
-<script type="module" src="auth.js"></script>
-<script type="module" src="preferences.js"></script>
-
-</body>
-</html>
+    if (window.lucide) lucide.
