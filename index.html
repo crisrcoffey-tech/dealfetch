@@ -1090,6 +1090,7 @@
       persistCategories();
       renderChips();
       renderDeals();
+      renderFilterPill();
     });
     chipsEl.appendChild(allBtn);
 
@@ -1108,6 +1109,7 @@
         persistCategories();
         renderChips();
         renderDeals();
+        renderFilterPill();
       });
       chipsEl.appendChild(btn);
     });
@@ -1348,7 +1350,4 @@
 <!-- Supabase auth + preferences (ES modules, load after the inline render script
      so window.publixRerender exists when they dispatch their first events). -->
 <script type="module" src="auth.js"></script>
-<script type="module" src="preferences.js"></script>
-
-</body>
-</html>
+<script type="mo
