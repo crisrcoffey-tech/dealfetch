@@ -1116,4 +1116,19 @@
 
   // Initialize lucide icons that exist on first paint (header)
   document.addEventListener('DOMContentLoaded', () => {
-    if (window.lucide) lucide.
+    if (window.lucide) lucide.createIcons();
+    init();
+  });
+
+  // Re-render when prefs or auth state change
+  window.addEventListener('publix-prefs-change', rerenderAll);
+  window.addEventListener('publix-auth-change', rerenderAll);
+</script>
+
+<!-- Supabase auth + preferences (ES modules, load after the inline render script
+     so window.publixRerender exists when they dispatch their first events). -->
+<script type="module" src="auth.js"></script>
+<script type="module" src="preferences.js"></script>
+
+</body>
+</html>
