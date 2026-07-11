@@ -6,14 +6,19 @@
 <meta name="theme-color" content="#007A33" />
 <title>DealFetch — Weekly Grocery Sales for Your Watchlist</title>
 <meta name="description" content="DealFetch tracks weekly sales at your favorite grocery stores and shows only the deals on items you actually buy." />
+
+<!-- Open Graph -->
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="DealFetch" />
 <meta property="og:title" content="DealFetch — Weekly Grocery Sales for Your Watchlist" />
 <meta property="og:description" content="DealFetch tracks weekly sales at your favorite grocery stores and shows only the deals on items you actually buy." />
 <meta property="og:url" content="https://publix-bogos-dashboard.vercel.app/" />
+
+<!-- Twitter -->
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:title" content="DealFetch — Weekly Grocery Sales for Your Watchlist" />
 <meta name="twitter:description" content="DealFetch tracks weekly sales at your favorite grocery stores and shows only the deals on items you actually buy." />
+
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -21,159 +26,727 @@
 <script src="config.js"></script>
 <style>
   :root {
-    --publix-green: #007A33; --publix-green-dark: #005f28; --publix-green-soft: #e6f3ec;
-    --bogo: #007A33; --save: #C8102E;
-    --ink: #15181c; --ink-2: #41464d; --muted: #6b7280; --line: #e6e8ec;
-    --bg: #ffffff; --card: #ffffff; --chip-bg: #f3f4f6;
-    --cat-wine: #6d1638; --cat-wine-bg: #fbe9ef;
-    --cat-beer: #b8730c; --cat-beer-bg: #fdf1d9;
-    --cat-pork: #b34a4a; --cat-pork-bg: #fbe7e7;
-    --cat-gf: #2e7d32; --cat-gf-bg: #e6f3ec;
+    --publix-green: #007A33;
+    --publix-green-dark: #005f28;
+    --publix-green-soft: #e6f3ec;
+    --bogo: #007A33;
+    --save: #C8102E;
+    --ink: #15181c;
+    --ink-2: #41464d;
+    --muted: #6b7280;
+    --line: #e6e8ec;
+    --bg: #ffffff;
+    --card: #ffffff;
+    --chip-bg: #f3f4f6;
+    --cat-wine: #6d1638;
+    --cat-wine-bg: #fbe9ef;
+    --cat-beer: #b8730c;
+    --cat-beer-bg: #fdf1d9;
+    --cat-pork: #b34a4a;
+    --cat-pork-bg: #fbe7e7;
+    --cat-gf: #2e7d32;
+    --cat-gf-bg: #e6f3ec;
     --shadow: 0 1px 2px rgba(15, 23, 42, .04), 0 4px 12px rgba(15, 23, 42, .04);
   }
+
   * { box-sizing: border-box; }
-  [hidden] { display: none !important; }
-  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink); overflow-x: hidden; width: 100%; max-width: 100%; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink); }
+  html, body { overflow-x: hidden; width: 100%; max-width: 100%; }
   body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-    -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
-    line-height: 1.45; padding-bottom: env(safe-area-inset-bottom, 0);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    line-height: 1.45;
+    padding-bottom: env(safe-area-inset-bottom, 0);
   }
+
   .container { max-width: 1180px; margin: 0 auto; padding: 0 20px; width: 100%; min-width: 0; }
   .chips-wrap, header.site, main, footer { max-width: 100%; }
-  header.site { background: var(--publix-green); color: #fff; padding: 24px 0 22px; position: sticky; top: 0; z-index: 10; box-shadow: 0 1px 0 rgba(0,0,0,.06); }
-  .header-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex-wrap: wrap; min-width: 0; }
+
+  /* Header */
+  header.site {
+    background: var(--publix-green);
+    color: #fff;
+    padding: 24px 0 22px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    box-shadow: 0 1px 0 rgba(0,0,0,.06);
+  }
+  .header-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    min-width: 0;
+  }
   .header-row > div:first-child { min-width: 0; flex: 1 1 auto; }
   .brand { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; min-width: 0; }
   .brand > div { min-width: 0; }
-  .brand-mark { width: 36px; height: 36px; background: #fff; color: var(--publix-green); border-radius: 9px; display: grid; place-items: center; font-weight: 800; flex-shrink: 0; box-shadow: 0 1px 0 rgba(0,0,0,.05); }
+  .brand-mark {
+    width: 36px; height: 36px;
+    background: #fff;
+    color: var(--publix-green);
+    border-radius: 9px;
+    display: grid; place-items: center;
+    font-weight: 800;
+    flex-shrink: 0;
+    box-shadow: 0 1px 0 rgba(0,0,0,.05);
+  }
   .brand-mark svg { width: 22px; height: 22px; }
   h1 { font-size: 22px; font-weight: 800; margin: 0; letter-spacing: -0.01em; }
   .tagline { font-size: 13px; opacity: .85; font-weight: 500; margin-top: 1px; letter-spacing: .005em; }
   .meta { display: flex; gap: 14px; flex-wrap: wrap; font-size: 13px; opacity: .92; margin-top: 4px; }
   .meta span { display: inline-flex; align-items: center; gap: 6px; }
   .meta svg { width: 14px; height: 14px; }
+
+  /* Header auth area */
   .auth-area { display: flex; align-items: center; gap: 8px; flex-shrink: 0; padding-top: 2px; }
-  .auth-btn { background: rgba(255,255,255,.16); color: #fff; border: 1px solid rgba(255,255,255,.28); border-radius: 8px; padding: 7px 12px; font-size: 13px; font-weight: 600; font-family: inherit; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: background .15s ease, border-color .15s ease; -webkit-tap-highlight-color: transparent; }
+  .auth-btn {
+    background: rgba(255,255,255,.16);
+    color: #fff;
+    border: 1px solid rgba(255,255,255,.28);
+    border-radius: 8px;
+    padding: 7px 12px;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: background .15s ease, border-color .15s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
   .auth-btn:hover { background: rgba(255,255,255,.26); border-color: rgba(255,255,255,.45); }
   .auth-btn svg { width: 14px; height: 14px; }
   .auth-btn.primary { background: #fff; color: var(--publix-green); border-color: #fff; }
   .auth-btn.primary:hover { background: #f3f4f6; }
-  .auth-email { color: #fff; font-size: 13px; font-weight: 500; opacity: .92; max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-right: 4px; }
-  @media (max-width: 640px) { .auth-email { max-width: 120px; font-size: 12px; } .auth-btn { padding: 6px 10px; font-size: 12px; } }
-  .filter-controls { display: flex; align-items: center; gap: 10px; padding: 12px 0 0; flex-wrap: wrap; }
-  .filter-controls .search-wrap { position: relative; flex: 1 1 260px; min-width: 200px; }
-  .filter-controls .search-wrap svg { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); width: 15px; height: 15px; color: var(--muted); pointer-events: none; }
-  .filter-controls .keyword-input { width: 100%; font-family: inherit; font-size: 14px; padding: 9px 32px 9px 34px; border: 1px solid var(--line); border-radius: 8px; background: #fff; color: var(--ink); transition: border-color .15s ease, box-shadow .15s ease; }
-  .filter-controls .keyword-input:focus { outline: none; border-color: var(--publix-green); box-shadow: 0 0 0 3px var(--publix-green-soft); }
-  .filter-controls .keyword-clear { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); background: transparent; border: none; color: var(--muted); cursor: pointer; padding: 4px 6px; line-height: 0; border-radius: 6px; }
+  .auth-email {
+    color: #fff;
+    font-size: 13px;
+    font-weight: 500;
+    opacity: .92;
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding-right: 4px;
+  }
+  @media (max-width: 640px) {
+    .auth-email { max-width: 120px; font-size: 12px; }
+    .auth-btn { padding: 6px 10px; font-size: 12px; }
+  }
+
+  /* Filter controls row (keyword + BOGO toggle) */
+  .filter-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 0 0;
+    flex-wrap: wrap;
+  }
+  .filter-controls .search-wrap {
+    position: relative;
+    flex: 1 1 260px;
+    min-width: 200px;
+  }
+  .filter-controls .search-wrap svg {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 15px;
+    height: 15px;
+    color: var(--muted);
+    pointer-events: none;
+  }
+  .filter-controls .keyword-input {
+    width: 100%;
+    font-family: inherit;
+    font-size: 14px;
+    padding: 9px 32px 9px 34px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: #fff;
+    color: var(--ink);
+    transition: border-color .15s ease, box-shadow .15s ease;
+  }
+  .filter-controls .keyword-input:focus {
+    outline: none;
+    border-color: var(--publix-green);
+    box-shadow: 0 0 0 3px var(--publix-green-soft);
+  }
+  .filter-controls .keyword-clear {
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    padding: 4px 6px;
+    line-height: 0;
+    border-radius: 6px;
+  }
   .filter-controls .keyword-clear:hover { background: #f3f4f6; color: var(--ink); }
   .filter-controls .keyword-clear svg { width: 14px; height: 14px; }
-  .bogo-toggle { display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border: 1px solid var(--line); background: #fff; color: var(--ink-2); border-radius: 999px; font-size: 14px; font-weight: 600; cursor: pointer; transition: background .15s ease, border-color .15s ease, color .15s ease; -webkit-tap-highlight-color: transparent; user-select: none; flex-shrink: 0; }
+  .bogo-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border: 1px solid var(--line);
+    background: #fff;
+    color: var(--ink-2);
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .15s ease, border-color .15s ease, color .15s ease;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    flex-shrink: 0;
+  }
   .bogo-toggle:hover { background: #f7f8fa; border-color: #d6dae0; }
-  .bogo-toggle.on { background: var(--publix-green); color: #fff; border-color: var(--publix-green); }
+  .bogo-toggle.on {
+    background: var(--publix-green);
+    color: #fff;
+    border-color: var(--publix-green);
+  }
   .bogo-toggle input { accent-color: var(--publix-green); pointer-events: none; }
   .bogo-toggle svg { width: 14px; height: 14px; }
-  .chips-wrap { background: #fff; border-bottom: 1px solid var(--line); position: sticky; top: 92px; z-index: 9; }
-  .chips { display: flex; gap: 8px; padding: 14px 0 14px; overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch; scroll-snap-type: x proximity; scrollbar-width: none; -ms-overflow-style: none; max-width: 100%; }
+
+  /* Filter chips */
+  .chips-wrap {
+    background: #fff;
+    border-bottom: 1px solid var(--line);
+    position: sticky;
+    top: 92px;
+    z-index: 9;
+  }
+  .chips {
+    display: flex;
+    gap: 8px;
+    padding: 14px 0 14px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    /* Allow chip row to scroll without forcing the page wider */
+    max-width: 100%;
+  }
   .chips::-webkit-scrollbar { display: none; }
-  .chip { flex-shrink: 0; scroll-snap-align: start; border: 1px solid var(--line); background: var(--chip-bg); color: var(--ink-2); border-radius: 999px; padding: 8px 14px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all .15s ease; font-family: inherit; display: inline-flex; align-items: center; gap: 6px; -webkit-tap-highlight-color: transparent; }
+  .chip {
+    flex-shrink: 0;
+    scroll-snap-align: start;
+    border: 1px solid var(--line);
+    background: var(--chip-bg);
+    color: var(--ink-2);
+    border-radius: 999px;
+    padding: 8px 14px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .15s ease;
+    font-family: inherit;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    -webkit-tap-highlight-color: transparent;
+  }
   .chip:hover { background: #e9ebef; }
-  .chip[aria-pressed="true"] { background: var(--publix-green); color: #fff; border-color: var(--publix-green); }
-  .chip .count { font-size: 12px; font-weight: 700; opacity: .7; margin-left: 2px; }
+  .chip[aria-pressed="true"] {
+    background: var(--publix-green);
+    color: #fff;
+    border-color: var(--publix-green);
+  }
+  .chip .count {
+    font-size: 12px;
+    font-weight: 700;
+    opacity: .7;
+    margin-left: 2px;
+  }
   .chip[aria-pressed="true"] .count { opacity: 1; }
+
+  /* Store filter row — scoping selector above the category chips. Slimmer
+     padding so it reads as a separate, higher-level filter. */
+  .chips.store-row {
+    padding: 12px 0 6px;
+    border-bottom: 1px dashed var(--line);
+    margin-bottom: 4px;
+  }
+  .chip.store-chip { padding: 6px 12px; font-size: 13px; }
+
+  /* Filtering-active pill */
   .filter-pill-wrap { padding: 16px 0 0; }
-  .filter-pill { display: inline-flex; align-items: center; gap: 10px; background: var(--publix-green-soft); border: 1px solid #c7e2d2; color: var(--publix-green-dark); padding: 8px 14px; border-radius: 999px; font-size: 13px; font-weight: 600; }
+  .filter-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--publix-green-soft);
+    border: 1px solid #c7e2d2;
+    color: var(--publix-green-dark);
+    padding: 8px 14px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+  }
   .filter-pill svg { width: 14px; height: 14px; }
-  .filter-pill button { background: transparent; border: none; color: var(--publix-green-dark); font: inherit; font-weight: 700; cursor: pointer; text-decoration: underline; padding: 0; }
-  .config-warn { background: #fff7e6; border: 1px solid #f5d48a; color: #8a5a00; padding: 12px 16px; border-radius: 10px; font-size: 13px; margin: 16px 0 0; }
+  .filter-pill button {
+    background: transparent;
+    border: none;
+    color: var(--publix-green-dark);
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: underline;
+    padding: 0;
+  }
+
+  /* Config warning */
+  .config-warn {
+    background: #fff7e6;
+    border: 1px solid #f5d48a;
+    color: #8a5a00;
+    padding: 12px 16px;
+    border-radius: 10px;
+    font-size: 13px;
+    margin: 16px 0 0;
+  }
   .config-warn code { background: rgba(0,0,0,.05); padding: 2px 5px; border-radius: 4px; font-size: 12px; }
+
+  /* Main */
   main { padding: 24px 0 56px; }
-  .grid { display: grid; gap: 16px; grid-template-columns: 1fr; width: 100%; min-width: 0; }
+
+  .grid {
+    display: grid;
+    gap: 16px;
+    grid-template-columns: 1fr;
+    width: 100%;
+    min-width: 0;
+  }
   @media (min-width: 640px) { .grid { grid-template-columns: 1fr 1fr; gap: 18px; } }
   @media (min-width: 980px) { .grid { grid-template-columns: 1fr 1fr 1fr; gap: 20px; } }
-  .card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 18px; display: flex; flex-direction: column; box-shadow: var(--shadow); transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease; min-width: 0; overflow-wrap: break-word; word-wrap: break-word; }
+
+  /* Card */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--shadow);
+    transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+    min-width: 0;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+  }
   .card .name, .card .price, .card .details { overflow-wrap: break-word; word-wrap: break-word; min-width: 0; }
-  .card:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(15,23,42,.05), 0 12px 24px rgba(15,23,42,.06); border-color: #d6dae0; }
-  .card-top { display: flex; align-items: flex-start; justify-content: flex-start; gap: 6px; margin-bottom: 10px; flex-wrap: wrap; }
-  .badge { display: inline-flex; align-items: center; gap: 5px; padding: 4px 9px; border-radius: 6px; font-size: 11px; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; flex-shrink: 0; }
+  .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(15,23,42,.05), 0 12px 24px rgba(15,23,42,.06);
+    border-color: #d6dae0;
+  }
+
+  .card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 6px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 9px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    flex-shrink: 0;
+  }
   .badge svg { width: 12px; height: 12px; }
   .badge.bogo { background: var(--publix-green); color: #fff; }
   .badge.save { background: var(--save); color: #fff; }
-  .badge.watchlist { background: #fff7d6; color: #8a5a00; border: 1px solid #f3d68a; text-transform: none; letter-spacing: 0; font-weight: 700; }
-  .badge.store { background: var(--publix-green-soft); color: var(--publix-green-dark); border: 1px solid #c7e2d2; text-transform: none; letter-spacing: 0; font-weight: 700; }
-  .card.is-watchlist { box-shadow: 0 0 0 2px #f3d68a, var(--shadow); background: #fffcf2; }
-  .cat { display: inline-flex; align-items: center; gap: 5px; padding: 3px 8px; border-radius: 999px; font-size: 11px; font-weight: 600; letter-spacing: .01em; }
+  .badge.watchlist {
+    background: #fff7d6;
+    color: #8a5a00;
+    border: 1px solid #f3d68a;
+    text-transform: none;
+    letter-spacing: 0;
+    font-weight: 700;
+  }
+  .badge.store {
+    background: var(--publix-green-soft);
+    color: var(--publix-green-dark);
+    border: 1px solid #c7e2d2;
+    text-transform: none;
+    letter-spacing: 0;
+    font-weight: 700;
+  }
+  .card.is-watchlist {
+    box-shadow: 0 0 0 2px #f3d68a, var(--shadow);
+    background: #fffcf2;
+  }
+
+  .cat {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 8px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .01em;
+  }
   .cat.wine { color: var(--cat-wine); background: var(--cat-wine-bg); }
   .cat.beer { color: var(--cat-beer); background: var(--cat-beer-bg); }
   .cat.pork { color: var(--cat-pork); background: var(--cat-pork-bg); }
   .cat.gf   { color: var(--cat-gf);   background: var(--cat-gf-bg); }
-  .name { font-size: 16px; font-weight: 700; color: var(--ink); margin: 0 0 10px; line-height: 1.3; letter-spacing: -0.005em; }
-  .price { font-size: 22px; font-weight: 800; color: var(--ink); letter-spacing: -0.01em; line-height: 1; margin-bottom: 4px; }
+
+  .name {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--ink);
+    margin: 0 0 10px;
+    line-height: 1.3;
+    letter-spacing: -0.005em;
+  }
+
+  .price {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
   .price.bogo-text { color: var(--publix-green); }
-  .savings { display: inline-flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 600; color: var(--save); margin-top: 6px; }
+
+  .savings {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--save);
+    margin-top: 6px;
+  }
   .savings svg { width: 13px; height: 13px; }
-  .details { margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--line); font-size: 13px; color: var(--muted); line-height: 1.45; }
-  .card-foot { margin-top: 12px; display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: var(--muted); }
+
+  .details {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px dashed var(--line);
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.45;
+  }
+
+  .card-foot {
+    margin-top: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: var(--muted);
+  }
   .card-foot svg { width: 12px; height: 12px; vertical-align: -1px; margin-right: 3px; }
-  .section-head { display: flex; align-items: baseline; justify-content: space-between; margin: 4px 0 16px; }
-  .section-head h2 { font-size: 15px; font-weight: 700; margin: 0; color: var(--ink-2); letter-spacing: .01em; text-transform: uppercase; }
-  .section-head .count-pill { font-size: 12px; color: var(--muted); font-weight: 600; }
-  .empty { text-align: center; padding: 56px 24px; background: #fafbfc; border: 1px dashed var(--line); border-radius: 14px; color: var(--muted); }
+
+  /* Section heading */
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin: 4px 0 16px;
+  }
+  .section-head h2 {
+    font-size: 15px;
+    font-weight: 700;
+    margin: 0;
+    color: var(--ink-2);
+    letter-spacing: .01em;
+    text-transform: uppercase;
+  }
+  .section-head .count-pill {
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 600;
+  }
+
+  /* Empty state */
+  .empty {
+    text-align: center;
+    padding: 56px 24px;
+    background: #fafbfc;
+    border: 1px dashed var(--line);
+    border-radius: 14px;
+    color: var(--muted);
+  }
   .empty svg { width: 32px; height: 32px; opacity: .5; margin-bottom: 10px; }
   .empty h3 { font-size: 16px; font-weight: 700; color: var(--ink-2); margin: 0 0 4px; }
   .empty p { margin: 0; font-size: 14px; }
-  .notfound { margin-top: 48px; padding-top: 28px; border-top: 1px solid var(--line); }
-  .notfound h2 { font-size: 14px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; margin: 0 0 12px; display: flex; align-items: center; gap: 6px; }
+
+  /* Not found section */
+  .notfound {
+    margin-top: 48px;
+    padding-top: 28px;
+    border-top: 1px solid var(--line);
+  }
+  .notfound h2 {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    margin: 0 0 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
   .notfound h2 svg { width: 14px; height: 14px; }
-  .notfound-list { display: flex; flex-wrap: wrap; gap: 8px; }
-  .notfound-item { display: inline-flex; align-items: center; gap: 5px; background: #f7f8fa; border: 1px solid var(--line); color: var(--muted); padding: 6px 12px; border-radius: 999px; font-size: 13px; font-weight: 500; }
+  .notfound-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .notfound-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: #f7f8fa;
+    border: 1px solid var(--line);
+    color: var(--muted);
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 500;
+  }
   .notfound-item svg { width: 12px; height: 12px; opacity: .6; }
+
+  /* Loading skeleton */
   .skeleton-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
   @media (min-width: 640px) { .skeleton-grid { grid-template-columns: 1fr 1fr; } }
   @media (min-width: 980px) { .skeleton-grid { grid-template-columns: 1fr 1fr 1fr; } }
-  .skel { background: #f3f4f6; border-radius: 14px; height: 180px; animation: pulse 1.4s ease-in-out infinite; }
+  .skel {
+    background: #f3f4f6;
+    border-radius: 14px;
+    height: 180px;
+    animation: pulse 1.4s ease-in-out infinite;
+  }
   @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .55; } }
-  footer { margin-top: 32px; padding: 24px 0 16px; text-align: center; color: var(--muted); font-size: 12px; }
+
+  /* Footer */
+  footer {
+    margin-top: 32px;
+    padding: 24px 0 16px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 12px;
+  }
   footer a { color: var(--publix-green); text-decoration: none; font-weight: 600; }
-  .modal { position: fixed; inset: 0; background: rgba(15, 23, 42, .5); z-index: 100; display: flex; align-items: flex-start; justify-content: center; padding: 60px 16px 24px; overflow-y: auto; -webkit-tap-highlight-color: transparent; }
-  .modal-card { background: #fff; border-radius: 16px; width: 100%; max-width: 480px; box-shadow: 0 20px 60px rgba(15, 23, 42, .25); overflow: hidden; animation: modalIn .18s ease-out; }
+
+  /* Modal */
+  .modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, .5);
+    z-index: 100;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 60px 16px 24px;
+    overflow-y: auto;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .modal[hidden] { display: none; }
+  .modal-card {
+    background: #fff;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 480px;
+    box-shadow: 0 20px 60px rgba(15, 23, 42, .25);
+    overflow: hidden;
+    animation: modalIn .18s ease-out;
+  }
   .modal-card.wide { max-width: 640px; }
   @keyframes modalIn { from { transform: translateY(-8px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-  .modal-head { display: flex; align-items: center; justify-content: space-between; padding: 18px 20px; border-bottom: 1px solid var(--line); }
+  .modal-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 20px;
+    border-bottom: 1px solid var(--line);
+  }
   .modal-head h3 { margin: 0; font-size: 17px; font-weight: 800; color: var(--ink); letter-spacing: -0.005em; }
-  .modal-close { background: transparent; border: none; cursor: pointer; color: var(--muted); padding: 4px; line-height: 0; border-radius: 6px; }
+  .modal-close {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: var(--muted);
+    padding: 4px;
+    line-height: 0;
+    border-radius: 6px;
+  }
   .modal-close:hover { background: #f3f4f6; color: var(--ink); }
   .modal-close svg { width: 18px; height: 18px; }
   .modal-body { padding: 20px; max-height: 70vh; overflow-y: auto; }
-  .modal-foot { display: flex; align-items: center; justify-content: flex-end; gap: 10px; padding: 14px 20px; border-top: 1px solid var(--line); background: #fafbfc; }
-  .modal-foot .status-msg { flex: 1; font-size: 13px; color: var(--muted); text-align: left; }
-  .btn { font-family: inherit; font-size: 14px; font-weight: 600; padding: 9px 16px; border-radius: 8px; border: 1px solid var(--line); background: #fff; color: var(--ink); cursor: pointer; transition: background .15s ease, border-color .15s ease; }
+  .modal-foot {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 14px 20px;
+    border-top: 1px solid var(--line);
+    background: #fafbfc;
+  }
+  .modal-foot .status-msg {
+    flex: 1;
+    font-size: 13px;
+    color: var(--muted);
+    text-align: left;
+  }
+
+  .btn {
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 9px 16px;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+    background: #fff;
+    color: var(--ink);
+    cursor: pointer;
+    transition: background .15s ease, border-color .15s ease;
+  }
   .btn:hover { background: #f3f4f6; }
   .btn.primary { background: var(--publix-green); color: #fff; border-color: var(--publix-green); }
   .btn.primary:hover { background: var(--publix-green-dark); border-color: var(--publix-green-dark); }
   .btn.subtle { color: var(--muted); }
+
+  /* Form inputs */
   .field { display: block; margin-bottom: 14px; }
   .field label { display: block; font-size: 13px; font-weight: 600; color: var(--ink-2); margin-bottom: 6px; }
-  .pref-input, input[type="email"].pref-input, input[type="text"].pref-input { width: 100%; font-family: inherit; font-size: 14px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px; background: #fff; color: var(--ink); transition: border-color .15s ease, box-shadow .15s ease; }
-  .pref-input:focus { outline: none; border-color: var(--publix-green); box-shadow: 0 0 0 3px var(--publix-green-soft); }
+  .pref-input, input[type="email"].pref-input, input[type="text"].pref-input {
+    width: 100%;
+    font-family: inherit;
+    font-size: 14px;
+    padding: 10px 12px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: #fff;
+    color: var(--ink);
+    transition: border-color .15s ease, box-shadow .15s ease;
+  }
+  .pref-input:focus {
+    outline: none;
+    border-color: var(--publix-green);
+    box-shadow: 0 0 0 3px var(--publix-green-soft);
+  }
+
+  /* Prefs sections */
   .pref-section { margin-bottom: 20px; }
-  .pref-section h4 { margin: 0 0 8px; font-size: 13px; font-weight: 700; color: var(--ink-2); text-transform: uppercase; letter-spacing: .04em; }
+  .pref-section h4 {
+    margin: 0 0 8px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ink-2);
+    text-transform: uppercase;
+    letter-spacing: .04em;
+  }
   .pref-help { margin: 0 0 8px; font-size: 13px; color: var(--muted); line-height: 1.5; }
   .pref-checks { display: flex; flex-wrap: wrap; gap: 8px; }
-  .pref-check { display: inline-flex; align-items: center; gap: 7px; padding: 7px 12px; border: 1px solid var(--line); border-radius: 999px; font-size: 13px; font-weight: 500; cursor: pointer; background: #fff; color: var(--ink-2); transition: background .15s ease, border-color .15s ease; }
+  .pref-check {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 7px 12px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    background: #fff;
+    color: var(--ink-2);
+    transition: background .15s ease, border-color .15s ease;
+  }
   .pref-check:hover { background: #f7f8fa; border-color: #d6dae0; }
   .pref-check input { accent-color: var(--publix-green); }
   .pref-check input:checked + span { color: var(--publix-green-dark); font-weight: 700; }
-  .watchlist-chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 10px; min-height: 4px; }
-  .wl-chip { display: inline-flex; align-items: center; gap: 6px; background: var(--publix-green-soft); color: var(--publix-green-dark); padding: 5px 6px 5px 11px; border-radius: 999px; font-size: 13px; font-weight: 600; }
-  .wl-remove { background: rgba(0,0,0,.08); color: var(--publix-green-dark); border: none; width: 18px; height: 18px; border-radius: 50%; font-size: 14px; line-height: 1; cursor: pointer; padding: 0; font-family: inherit; }
+
+  /* Watchlist */
+  .watchlist-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 0 0 10px;
+    min-height: 4px;
+  }
+  .wl-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--publix-green-soft);
+    color: var(--publix-green-dark);
+    padding: 5px 6px 5px 11px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .wl-remove {
+    background: rgba(0,0,0,.08);
+    color: var(--publix-green-dark);
+    border: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    font-size: 14px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0;
+    font-family: inherit;
+  }
   .wl-remove:hover { background: rgba(0,0,0,.16); }
   .pref-details { margin-top: 10px; font-size: 13px; }
-  .pref-details summary { cursor: pointer; color: var(--publix-green-dark); font-weight: 600; padding: 6px 0; }
-  .watchlist-suggestions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; max-height: 200px; overflow-y: auto; padding: 4px 2px; }
-  .watchlist-suggestions .suggestion { font-family: inherit; font-size: 12px; background: #f3f4f6; color: var(--ink-2); border: 1px solid var(--line); padding: 4px 9px; border-radius: 999px; cursor: pointer; transition: background .15s ease; }
+  .pref-details summary {
+    cursor: pointer;
+    color: var(--publix-green-dark);
+    font-weight: 600;
+    padding: 6px 0;
+  }
+  .watchlist-suggestions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+    max-height: 200px;
+    overflow-y: auto;
+    padding: 4px 2px;
+  }
+  .watchlist-suggestions .suggestion {
+    font-family: inherit;
+    font-size: 12px;
+    background: #f3f4f6;
+    color: var(--ink-2);
+    border: 1px solid var(--line);
+    padding: 4px 9px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background .15s ease;
+  }
   .watchlist-suggestions .suggestion:hover { background: var(--publix-green-soft); color: var(--publix-green-dark); border-color: #c7e2d2; }
+
+  /* Small screen tweaks */
   @media (max-width: 600px) {
     .container { padding: 0 14px; }
     .grid { grid-template-columns: 1fr; gap: 12px; }
@@ -183,7 +756,16 @@
     .meta { font-size: 12px; gap: 10px; }
     .meta span { max-width: 100%; }
     #lastUpdated, #weekOf { overflow-wrap: anywhere; word-break: break-word; }
-    .chips { flex-wrap: wrap; overflow-x: visible; scroll-snap-type: none; padding: 12px 0 12px; row-gap: 8px; }
+    /* On mobile, wrap the filter chips into multiple rows instead of relying
+       on horizontal scrolling, which iOS Safari often cannot reach when a
+       sticky row inside a vertically-scrolling page eats touch gestures. */
+    .chips {
+      flex-wrap: wrap;
+      overflow-x: visible;
+      scroll-snap-type: none;
+      padding: 12px 0 12px;
+      row-gap: 8px;
+    }
     .chip { flex-shrink: 0; }
   }
   @media (max-width: 480px) {
@@ -201,6 +783,7 @@
 </style>
 </head>
 <body>
+
 <header class="site">
   <div class="container">
     <div class="header-row">
@@ -223,6 +806,7 @@
           <span><i data-lucide="clock"></i> Updated <span id="lastUpdated">—</span></span>
         </div>
       </div>
+
       <div class="auth-area">
         <span id="authUserEmail" class="auth-email" title="" hidden></span>
         <button id="btnPrefs" class="auth-btn" type="button" aria-label="Preferences" hidden>
@@ -236,12 +820,15 @@
     </div>
   </div>
 </header>
+
 <div class="chips-wrap">
   <div class="container">
     <div class="filter-controls">
       <div class="search-wrap">
         <i data-lucide="search"></i>
-        <input type="text" id="keywordInput" class="keyword-input" placeholder="Search deals (name or details)…" autocomplete="off" spellcheck="false" />
+        <input type="text" id="keywordInput" class="keyword-input"
+          placeholder="Search deals (name or details)…"
+          autocomplete="off" spellcheck="false" />
         <button type="button" id="keywordClear" class="keyword-clear" aria-label="Clear search" hidden>
           <i data-lucide="x"></i>
         </button>
@@ -250,14 +837,17 @@
         <i data-lucide="tag"></i> BOGO only
       </button>
     </div>
+    <div class="chips store-row" id="storeChips" role="group" aria-label="Store filter" hidden></div>
     <div class="chips" id="chips" role="group" aria-label="Category filter (multi-select)"></div>
   </div>
 </div>
+
 <main>
   <div class="container">
     <div id="configWarning" class="config-warn" hidden>
       <strong>Heads up:</strong> Supabase isn't configured yet. Edit <code>config.js</code> with your project URL and anon key — see <code>SUPABASE_SETUP.md</code>. Sign in is disabled until then.
     </div>
+
     <div class="filter-pill-wrap" id="filterPillWrap" hidden>
       <span class="filter-pill">
         <i data-lucide="filter"></i>
@@ -265,6 +855,7 @@
         <button type="button" id="btnClearActiveFilters">clear</button>
       </span>
     </div>
+
     <div class="section-head">
       <h2 id="sectionLabel">All Deals</h2>
       <span class="count-pill" id="visibleCount">—</span>
@@ -275,16 +866,23 @@
         <div class="skel"></div><div class="skel"></div><div class="skel"></div>
       </div>
     </div>
+
     <section class="notfound" id="notfoundSection" hidden>
       <h2><i data-lucide="search-x"></i> Not on sale this week</h2>
       <div class="notfound-list" id="notfoundList"></div>
     </section>
+
     <footer>
-      Refreshed automatically every Thursday morning.
-      Data scraped from <a href="https://www.publix.com/savings/weekly-ad" target="_blank" rel="noopener">Publix weekly ad</a>.
+      Publix refreshes Thursdays; Walmart Rollbacks update continuously.
+      Data scraped from
+      <a href="https://www.publix.com/savings/weekly-ad" target="_blank" rel="noopener">Publix weekly ad</a>
+      and
+      <a href="https://www.walmart.com/shop/savings" target="_blank" rel="noopener">Walmart Rollbacks &amp; Savings</a>.
     </footer>
   </div>
 </main>
+
+<!-- Sign In modal -->
 <div class="modal" id="signInModal" hidden>
   <div class="modal-card" role="dialog" aria-labelledby="signInTitle" aria-modal="true">
     <div class="modal-head">
@@ -306,6 +904,8 @@
     </form>
   </div>
 </div>
+
+<!-- Preferences modal -->
 <div class="modal" id="prefsModal" hidden>
   <div class="modal-card wide" role="dialog" aria-labelledby="prefsTitle" aria-modal="true">
     <div class="modal-head">
@@ -316,6 +916,7 @@
     </div>
     <div class="modal-body">
       <p class="pref-help">Watchlist items are highlighted with a star when they go on sale. Category, keyword, and BOGO filters are controlled directly from the toolbar above.</p>
+
       <div class="pref-section">
         <h4>Watchlist</h4>
         <div id="prefWatchlist"></div>
@@ -328,14 +929,33 @@
     </div>
   </div>
 </div>
+
 <script>
+  // ---------- Helpers ----------
+  // Category icon hints — falls back to a generic tag when no match.
   const CATEGORY_ICONS = {
-    'Baby': 'baby', 'Bakery': 'croissant', 'Beauty & Personal Care': 'sparkles',
-    'Beer & Wine': 'wine', 'Dairy': 'milk', 'Deli': 'sandwich', 'Floral': 'flower',
-    'Frozen Food': 'snowflake', 'Grocery': 'shopping-basket',
-    'Health & Nutrition': 'heart-pulse', 'Housewares': 'lamp', 'Meat': 'beef',
-    'Non-Foods': 'package', 'Pet': 'paw-print', 'Produce': 'apple', 'Seafood': 'fish',
+    'Baby': 'baby',
+    'Bakery': 'croissant',
+    'Beauty & Personal Care': 'sparkles',
+    'Beer & Wine': 'wine',
+    'Dairy': 'milk',
+    'Deli': 'sandwich',
+    'Floral': 'flower',
+    'Flash Deals': 'zap',
+    'Frozen Food': 'snowflake',
+    'Grocery': 'shopping-basket',
+    'Health & Nutrition': 'heart-pulse',
+    'Health & Wellness': 'heart-pulse',
+    'Household': 'home',
+    'Housewares': 'lamp',
+    'Meat': 'beef',
+    'Non-Foods': 'package',
+    'Pet': 'paw-print',
+    'Pets': 'paw-print',
+    'Produce': 'apple',
+    'Seafood': 'fish',
   };
+
   const catClassFor = (category) => {
     if (/wine|beer/i.test(category)) return 'wine';
     if (/meat|pork/i.test(category)) return 'pork';
@@ -343,36 +963,76 @@
     if (/bakery/i.test(category)) return 'beer';
     return '';
   };
+
   const isBogo = (deal) => /buy\s*1\s*get\s*1\s*free/i.test(deal || '');
+  const saleTypeOf = (deal) => isBogo(deal) ? 'BOGO' : 'SALE';
+
   const extractSize = (details) => {
     if (!details) return null;
     const m = details.match(/(\d[\d./–-]*\s*[-]?\s*(?:oz|mL|ml|L|lb|fl\s*oz|ct|pk|pack)\b[^,(]*)/i);
     return m ? m[1].trim() : null;
   };
+
   const formatDate = (iso) => {
     if (!iso) return '—';
-    const d = new Date(iso + 'T00:00:00');
+    // Accept full ISO timestamps or bare YYYY-MM-DD.
+    const d = /T\d/.test(iso) ? new Date(iso) : new Date(iso + 'T00:00:00');
     if (isNaN(d)) return iso;
     return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
   };
+
+  // Relative time string. Used in the header when multiple stores are showing
+  // on different flyer cadences — a single "Week of" doesn't apply, so we
+  // surface freshness of the scrape instead.
+  const formatRelative = (iso) => {
+    if (!iso) return '—';
+    const d = new Date(iso);
+    if (isNaN(d)) return iso;
+    const diffSec = Math.round((Date.now() - d.getTime()) / 1000);
+    if (diffSec < 60) return 'just now';
+    const diffMin = Math.round(diffSec / 60);
+    if (diffMin < 60) return `${diffMin} min${diffMin === 1 ? '' : 's'} ago`;
+    const diffHr = Math.round(diffMin / 60);
+    if (diffHr < 24) return `${diffHr} hour${diffHr === 1 ? '' : 's'} ago`;
+    const diffDay = Math.round(diffHr / 24);
+    if (diffDay === 1) return 'yesterday';
+    if (diffDay < 7) return `${diffDay} days ago`;
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  };
+
   const esc = (s) => String(s ?? '').replace(/[&<>"']/g, c => ({
     '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
   }[c]));
 
+  // ---------- State ----------
   let DATA = null;
+  // Multi-select set of category names. Empty = "All" (no category filter).
   let activeCategories = new Set();
+  // Free-text keyword substring against name + details, case-insensitive.
   let activeKeyword = '';
+  // BOGO-only toggle (independent of category chips).
   let activeBogo = false;
+  // Single-store filter. null = all stores. When set, header shows that store's
+  // own weekOf instead of the generic freshness label.
+  let activeStore = null;
+  // Debounce handle for keyword persistence.
   let _kwSaveTimer = null;
 
+  // Sync UI-owned filter state FROM the persisted prefs (called after auth /
+  // prefs change). Signed-out users see empty defaults; signed-in users see
+  // whatever they last saved. Watchlist stays in prefs.js.
   function syncFiltersFromPrefs() {
     const prefs = window.publixPrefs?.currentFilters?.() || null;
-    if (!prefs) { activeCategories = new Set(); activeKeyword = ''; activeBogo = false; }
-    else {
+    if (!prefs) {
+      activeCategories = new Set();
+      activeKeyword = '';
+      activeBogo = false;
+    } else {
       activeCategories = new Set(Array.isArray(prefs.categories) ? prefs.categories : []);
       activeKeyword = String(prefs.keyword || '');
       activeBogo = !!prefs.bogo_only;
     }
+    // Reflect into the UI controls if they exist.
     const kwInput = document.getElementById('keywordInput');
     if (kwInput) {
       kwInput.value = activeKeyword;
@@ -387,27 +1047,51 @@
   }
   window.publixSyncFiltersFromPrefs = syncFiltersFromPrefs;
 
+  // Deals list with all NON-category filters applied (keyword, BOGO, watchlist
+  // OR-inclusion). Used both to tally chip counts and as the base for the
+  // category filter. Excluding categories here keeps chip counts stable as
+  // the user toggles category chips.
   function preFilterDeals() {
     const deals = DATA?.deals || [];
     const kw = activeKeyword.trim().toLowerCase();
+    // Watchlist stays as an OR-inclusion signal for signed-in users, matching
+    // the pre-Phase-1 behavior.
     const prefs = window.publixPrefs?.currentFilters?.() || null;
     const wlLower = (prefs?.watchlist || []).map(w => String(w).toLowerCase()).filter(Boolean);
     const hasWatchlist = wlLower.length > 0;
+
     return deals.filter(d => {
-      const matchesKeyword = !kw || (String(d.name || '') + ' ' + String(d.details || '')).toLowerCase().includes(kw);
-      const matchesBogo = !activeBogo || d.deal === 'BOGO' || d.category === 'BOGO' || /buy\s*1\s*get\s*1\s*free/i.test(d.deal || '');
+      // matchesStore: single-store filter chip. null = all.
+      const matchesStore = !activeStore || d.store === activeStore;
+      if (!matchesStore) return false;
+      // matchesKeyword: substring against name + details, case-insensitive
+      const matchesKeyword = !kw
+        || (String(d.name || '') + ' ' + String(d.details || '')).toLowerCase().includes(kw);
+      // matchesBogo: independent BOGO toggle. Deals with deal==="BOGO" or
+      // category==="BOGO" (Publix ad section) both count as BOGO.
+      const matchesBogo = !activeBogo
+        || d.deal === 'BOGO'
+        || d.category === 'BOGO'
+        || /buy\s*1\s*get\s*1\s*free/i.test(d.deal || '');
+
+      // Watchlist OR-inclusion: a deal is force-included if it matches the
+      // watchlist, even if other filters would drop it. Only applies when
+      // signed in and watchlist is non-empty.
       const name = String(d.name || '').toLowerCase();
       const matchesWatchlist = hasWatchlist && wlLower.some(w => name.includes(w));
+
       return matchesWatchlist || (matchesKeyword && matchesBogo);
     });
   }
 
+  // Deals list after applying every filter — used by the grid.
   function filteredDeals() {
     const pre = preFilterDeals();
     if (activeCategories.size === 0) return pre;
     return pre.filter(d => activeCategories.has(d.category));
   }
 
+  // Returns the lowercase watchlist (used to highlight matching cards).
   function watchlistLower() {
     const wl = window.publixPrefs?.currentFilters?.()?.watchlist || [];
     return wl.map(w => String(w).toLowerCase()).filter(Boolean);
@@ -418,18 +1102,26 @@
     return wl.some(w => name.includes(w));
   }
 
+  // ---------- Render ----------
   function renderChips() {
     const chipsEl = document.getElementById('chips');
+    // Chip counts are based on the pre-category filter set, so they stay
+    // stable as the user toggles chips on and off.
     const pre = preFilterDeals();
     chipsEl.innerHTML = '';
+
     const counts = {};
     pre.forEach(d => {
       const c = d.category || 'Other';
+      // BOGO is now handled by the separate BOGO toggle; hide it from the
+      // category chip row.
       if (c === 'BOGO') return;
       counts[c] = (counts[c] || 0) + 1;
     });
     const cats = Object.keys(counts).sort();
 
+    // "All" chip: shows when no categories are selected, clears the selection
+    // when clicked.
     const allBtn = document.createElement('button');
     allBtn.className = 'chip';
     allBtn.type = 'button';
@@ -439,7 +1131,8 @@
     allBtn.addEventListener('click', () => {
       activeCategories.clear();
       persistCategories();
-      renderChips(); renderDeals(); renderFilterPill();
+      renderChips();
+      renderDeals();
     });
     chipsEl.appendChild(allBtn);
 
@@ -452,21 +1145,22 @@
       btn.dataset.cat = cat;
       btn.innerHTML = `<i data-lucide="${icon}"></i>${esc(cat)} <span class="count">${counts[cat]}</span>`;
       btn.addEventListener('click', () => {
+        // Multi-select: toggle this chip independently of others.
         if (activeCategories.has(cat)) activeCategories.delete(cat);
         else activeCategories.add(cat);
         persistCategories();
-        renderChips(); renderDeals(); renderFilterPill();
+        renderChips();
+        renderDeals();
       });
       chipsEl.appendChild(btn);
     });
 
-    // Only prune categories that no longer exist in the raw dataset (e.g.
-    // gone next week). Categories with 0 items after current keyword/BOGO
-    // filters stay selected — they reappear when the user relaxes filters.
-    const allRealCategories = new Set((DATA?.deals || []).map(d => d.category).filter(Boolean));
+    // Prune any stored selections that no longer exist in the current deal set
+    // (e.g. a category disappears in next week's data).
     for (const cat of Array.from(activeCategories)) {
-      if (!allRealCategories.has(cat)) activeCategories.delete(cat);
+      if (!counts[cat]) activeCategories.delete(cat);
     }
+
     if (window.lucide) lucide.createIcons();
   }
 
@@ -478,10 +1172,15 @@
     const content = document.getElementById('content');
     const label = document.getElementById('sectionLabel');
     const countEl = document.getElementById('visibleCount');
+
     const items = filteredDeals();
-    if (activeCategories.size === 0) label.textContent = activeBogo ? 'BOGO Deals' : 'All Deals';
-    else if (activeCategories.size === 1) label.textContent = `${[...activeCategories][0]} Deals`;
-    else label.textContent = `${activeCategories.size} Categories`;
+    if (activeCategories.size === 0) {
+      label.textContent = activeBogo ? 'BOGO Deals' : 'All Deals';
+    } else if (activeCategories.size === 1) {
+      label.textContent = `${[...activeCategories][0]} Deals`;
+    } else {
+      label.textContent = `${activeCategories.size} Categories`;
+    }
     countEl.textContent = `${items.length} ${items.length === 1 ? 'item' : 'items'}`;
 
     if (items.length === 0) {
@@ -490,13 +1189,14 @@
         <div class="empty">
           <i data-lucide="search-x"></i>
           <h3>No deals match</h3>
-          <p>${filtering ? 'Your saved preferences are filtering everything out. Try loosening them in Preferences.' : 'Nothing on sale in this category right now — check back next Thursday.'}</p>
+          <p>${filtering ? 'Your saved preferences are filtering everything out. Try loosening them in Preferences.' : 'Nothing on sale in this section right now — check back soon.'}</p>
         </div>`;
       if (window.lucide) lucide.createIcons();
       return;
     }
 
     const wl = watchlistLower();
+
     const grid = document.createElement('div');
     grid.className = 'grid';
 
@@ -505,6 +1205,7 @@
       const catCls = catClassFor(d.category);
       const size = extractSize(d.details);
       const wlHit = isWatchlistMatch(d, wl);
+
       const card = document.createElement('article');
       card.className = 'card' + (wlHit ? ' is-watchlist' : '');
       card.innerHTML = `
@@ -518,8 +1219,12 @@
         </div>
         <h3 class="name">${esc(d.name)}</h3>
         <div class="price ${bogo ? 'bogo-text' : ''}">${esc(d.deal)}</div>
-        ${d.savings ? `<div class="savings"><i data-lucide="trending-down"></i>${esc(d.savings)}</div>` : ''}
-        ${(d.details || size) ? `<div class="details">${esc(d.details || size)}</div>` : ''}
+        ${d.savings ? `
+          <div class="savings">
+            <i data-lucide="trending-down"></i>${esc(d.savings)}
+          </div>` : ''}
+        ${(d.details || size) ? `
+          <div class="details">${esc(d.details || size)}</div>` : ''}
         <div class="card-foot">
           <span><i data-lucide="calendar-days"></i>Valid ${esc(d.valid || '')}</span>
         </div>
@@ -538,10 +1243,13 @@
     if (!wrap || !text) return;
     const prefs = window.publixPrefs?.currentFilters?.() || null;
     const parts = [];
-    if (activeCategories.size) parts.push(`${activeCategories.size} categor${activeCategories.size === 1 ? 'y' : 'ies'}`);
+    if (activeCategories.size)
+      parts.push(`${activeCategories.size} categor${activeCategories.size === 1 ? 'y' : 'ies'}`);
     if (activeBogo) parts.push('BOGO only');
-    if (activeKeyword.trim()) parts.push(`"${activeKeyword.trim().slice(0, 24)}${activeKeyword.trim().length > 24 ? '…' : ''}"`);
-    if (prefs?.watchlist?.length) parts.push(`${prefs.watchlist.length} watchlist item${prefs.watchlist.length === 1 ? '' : 's'}`);
+    if (activeKeyword.trim())
+      parts.push(`"${activeKeyword.trim().slice(0, 24)}${activeKeyword.trim().length > 24 ? '…' : ''}"`);
+    if (prefs?.watchlist?.length)
+      parts.push(`${prefs.watchlist.length} watchlist item${prefs.watchlist.length === 1 ? '' : 's'}`);
     if (!parts.length) { wrap.hidden = true; return; }
     text.textContent = 'Filtering by: ' + parts.join(', ');
     wrap.hidden = false;
@@ -554,13 +1262,74 @@
     const list = document.getElementById('notfoundList');
     if (!items.length) { section.hidden = true; return; }
     section.hidden = false;
-    list.innerHTML = items.map(it => `<span class="notfound-item"><i data-lucide="x"></i>${esc(it)}</span>`).join('');
+    list.innerHTML = items.map(it =>
+      `<span class="notfound-item"><i data-lucide="x"></i>${esc(it)}</span>`
+    ).join('');
     if (window.lucide) lucide.createIcons();
   }
 
   function renderHeader() {
-    document.getElementById('weekOf').textContent = `Week of ${DATA?.weekOf || '—'}`;
-    document.getElementById('lastUpdated').textContent = formatDate(DATA?.lastUpdated);
+    // New multi-store schema: DATA.stores is an array of { name, weekOf, dealCount }.
+    // Old single-store schema: DATA.stores is an array of strings, DATA.weekOf at top.
+    const storesArr = Array.isArray(DATA?.stores) ? DATA.stores : [];
+    const isMultiStoreSchema = storesArr.length && typeof storesArr[0] === 'object';
+    const storeEl = document.getElementById('weekOf');
+    const updatedEl = document.getElementById('lastUpdated');
+
+    if (isMultiStoreSchema) {
+      // Single-store filter active → show that store's weekOf. Otherwise show
+      // freshness of the scrape (relative time), since stores cycle on different
+      // cadences and a global "Week of" would be misleading.
+      if (activeStore) {
+        const s = storesArr.find(x => x.name === activeStore);
+        storeEl.textContent = s?.weekOf ? `${s.name}: ${s.weekOf}` : `${activeStore}: —`;
+      } else {
+        storeEl.textContent = `Deals fresh as of ${formatRelative(DATA?.lastUpdated)}`;
+      }
+      // Keep the absolute "Updated" line as a hover tooltip / absolute reference.
+      updatedEl.textContent = formatDate(DATA?.lastUpdated);
+    } else {
+      // Legacy schema fallback (single-store deals.json).
+      storeEl.textContent = `Week of ${DATA?.weekOf || '—'}`;
+      updatedEl.textContent = formatDate(DATA?.lastUpdated);
+    }
+  }
+
+  // Store filter row — sits above the category chips. Segmented: "All / {store}"
+  // for each store in the current data. Hidden entirely when only one store.
+  function renderStoreChips() {
+    const wrap = document.getElementById('storeChips');
+    if (!wrap) return;
+    const storesArr = Array.isArray(DATA?.stores) ? DATA.stores : [];
+    const stores = storesArr.map(s => (typeof s === 'string' ? { name: s } : s));
+    if (stores.length < 2) {
+      wrap.hidden = true;
+      wrap.innerHTML = '';
+      return;
+    }
+    wrap.hidden = false;
+    wrap.innerHTML = '';
+
+    const mkBtn = (label, storeName, icon) => {
+      const btn = document.createElement('button');
+      btn.className = 'chip store-chip';
+      btn.type = 'button';
+      btn.setAttribute('aria-pressed', (storeName === activeStore) ? 'true' : 'false');
+      btn.innerHTML = `<i data-lucide="${icon}"></i>${esc(label)}`;
+      btn.addEventListener('click', () => {
+        activeStore = storeName;
+        renderStoreChips();
+        renderHeader();
+        renderChips();
+        renderDeals();
+      });
+      return btn;
+    };
+
+    wrap.appendChild(mkBtn('All Stores', null, 'store'));
+    stores.forEach(s => wrap.appendChild(mkBtn(s.name, s.name, 'store')));
+
+    if (window.lucide) lucide.createIcons();
   }
 
   function renderError(msg) {
@@ -577,10 +1346,15 @@
     if (!DATA) return;
     syncFiltersFromPrefs();
     renderFilterPill();
+    renderStoreChips();
+    renderHeader();
     renderChips();
     renderDeals();
   }
+  // Exposed so auth.js / preferences.js can trigger re-render on state changes.
   window.publixRerender = rerenderAll;
+  // Called by preferences.js when the user hits "Clear all filters" — reset
+  // the UI-owned filter state too.
   window.publixResetActiveCategory = function () {
     activeCategories = new Set();
     activeKeyword = '';
@@ -596,18 +1370,27 @@
     }
   };
 
+  // ---------- Wire keyword input + BOGO toggle ----------
   function wireFilterControls() {
     const kwInput = document.getElementById('keywordInput');
     const kwClear = document.getElementById('keywordClear');
     const bogoBtn = document.getElementById('bogoToggle');
+
     if (kwInput) {
+      // Live filter as they type; debounce persistence to Supabase.
       kwInput.addEventListener('input', () => {
         activeKeyword = kwInput.value;
         if (kwClear) kwClear.hidden = !activeKeyword;
-        renderChips(); renderDeals(); renderFilterPill();
+        renderChips();
+        renderDeals();
+        renderFilterPill();
         clearTimeout(_kwSaveTimer);
-        _kwSaveTimer = setTimeout(() => { window.publixPrefs?.setKeyword?.(activeKeyword); }, 400);
+        _kwSaveTimer = setTimeout(() => {
+          window.publixPrefs?.setKeyword?.(activeKeyword);
+        }, 400);
       });
+      // Also save immediately on blur so we don't lose a keyword the user
+      // typed and then walked away from before debounce fired.
       kwInput.addEventListener('blur', () => {
         clearTimeout(_kwSaveTimer);
         window.publixPrefs?.setKeyword?.(activeKeyword);
@@ -618,7 +1401,9 @@
         activeKeyword = '';
         if (kwInput) kwInput.value = '';
         kwClear.hidden = true;
-        renderChips(); renderDeals(); renderFilterPill();
+        renderChips();
+        renderDeals();
+        renderFilterPill();
         window.publixPrefs?.setKeyword?.('');
       });
     }
@@ -627,14 +1412,18 @@
         activeBogo = !activeBogo;
         bogoBtn.classList.toggle('on', activeBogo);
         bogoBtn.setAttribute('aria-checked', activeBogo ? 'true' : 'false');
-        renderChips(); renderDeals(); renderFilterPill();
+        renderChips();
+        renderDeals();
+        renderFilterPill();
         window.publixPrefs?.setBogo?.(activeBogo);
       });
     }
   }
 
+  // ---------- Boot ----------
   async function init() {
     try {
+      // Try new multi-store schema first; fall back to legacy single-store file.
       let res = await fetch('./deals.json', { cache: 'no-store' });
       if (!res.ok) res = await fetch('./publix_deals.json', { cache: 'no-store' });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -648,16 +1437,22 @@
     }
   }
 
+  // Initialize lucide icons that exist on first paint (header)
   document.addEventListener('DOMContentLoaded', () => {
     if (window.lucide) lucide.createIcons();
     wireFilterControls();
     init();
   });
 
+  // Re-render when prefs or auth state change
   window.addEventListener('publix-prefs-change', rerenderAll);
   window.addEventListener('publix-auth-change', rerenderAll);
 </script>
+
+<!-- Supabase auth + preferences (ES modules, load after the inline render script
+     so window.publixRerender exists when they dispatch their first events). -->
 <script type="module" src="auth.js"></script>
 <script type="module" src="preferences.js"></script>
+
 </body>
 </html>
