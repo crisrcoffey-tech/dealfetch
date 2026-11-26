@@ -1,196 +1,100 @@
 {
- "weekOf": "October 29 – November 4, 2026",
- "lastUpdated": "2026-10-29T16:18:59.634Z",
- "totalDeals": 938,
+ "weekOf": "November 26 – December 2, 2026",
+ "lastUpdated": "2026-11-26T17:30:00Z",
+ "totalDeals": 400,
  "store": "Zephyr Commons, Zephyrhills, FL 33541",
- "note": "categories hold watchlist matches only; totalDeals = deal cards parsed from full ad view (may include duplicates across sections)",
+ "note": "categories hold watchlist matches only; totalDeals = unique deal cards valid through 12/2 (791 cards parsed incl. prior week ending 11/26)",
  "categories": {
   "Wine": [
    {
-    "name": "Michael David Winery Wine",
-    "category": "Beer & Wine",
-    "deal": "Buy 1 Get 1 Free",
-    "details": "of equal or lesser price",
-    "savings": "Save Up To $20.79",
-    "valid": "10/29 - 11/4"
-   },
-   {
-    "name": "Miraval Côtes de Provence Wine",
+    "name": "Academia Cabernet Sauvignon Wine",
     "category": "Beer & Wine",
     "deal": "Buy 1 Get 1 Free",
     "details": "of equal or lesser price",
     "savings": "Save Up To $25.99",
-    "valid": "10/29 - 11/4"
+    "valid": "11/26 - 12/2"
    },
    {
-    "name": "Ventriloquist Cabernet Sauvignon Wine",
+    "name": "Clay Creek Cabernet Sauvignon Wine",
     "category": "Beer & Wine",
     "deal": "Buy 1 Get 1 Free",
     "details": "of equal or lesser price",
-    "savings": "Save Up To $28.99",
-    "valid": "10/29 - 11/4"
+    "savings": "Save Up To $18.79",
+    "valid": "11/26 - 12/2"
    },
    {
-    "name": "Sunscape Wine",
+    "name": "Maison de Madeleine Brut Wine",
     "category": "Beer & Wine",
-    "deal": "2 for $8.00",
-    "details": "500-mL box",
-    "savings": "Save Up To $1.29 On 2",
-    "valid": "10/29 - 11/4"
+    "deal": "Buy 1 Get 1 Free",
+    "details": "of equal or lesser price",
+    "savings": "Save Up To $16.99",
+    "valid": "11/26 - 12/2"
    },
    {
-    "name": "Sunset Social Pinot Grigio Wine",
+    "name": "Bartenura Moscato D'Asti Wine",
     "category": "Beer & Wine",
-    "deal": "2 for $12.00",
-    "details": "750-mL bot. (Other 750-mL Varieties Also on Sale, See Store for Details)",
-    "savings": "Save Up To $2.38 On 2",
-    "valid": "10/29 - 11/4"
+    "deal": "$12.99",
+    "details": "750-mL bot. (Other 750-mL or 4-pk. 250-mL Varieties Also on Sale, See Store for Details)",
+    "savings": "Save Up To $2.50",
+    "valid": "11/26 - 12/2"
    },
    {
-    "name": "Cloud Watcher Sauvignon Blanc Wine",
+    "name": "Black Box Cabernet Sauvignon Wine",
     "category": "Beer & Wine",
-    "deal": "$7.99",
-    "details": "750-mL bot. (Other 750-mL Varieties Also on Sale, See Store for Details)",
-    "savings": "Save Up To $2.30",
-    "valid": "10/29 - 11/4"
-   },
-   {
-    "name": "Sunscape Pinot Grigio Wine",
-    "category": "Beer & Wine",
-    "deal": "$16.99",
+    "deal": "$18.99",
     "details": "3-L box (Other 3-L Varieties Also on Sale, See Store for Details)",
-    "savings": "Save Up To $2.80",
-    "valid": "10/29 - 11/4"
+    "savings": "Save Up To $3.30",
+    "valid": "11/26 - 12/2"
    },
    {
-    "name": "19 Crimes Cabernet Sauvignon Wine",
+    "name": "Black Box Wine",
     "category": "Beer & Wine",
-    "deal": "$8.99",
-    "details": "750-mL bot. (Other 750-mL Varieties Also on Sale, See Store for Details)",
+    "deal": "2/$9.00",
+    "details": "500-mL box",
     "savings": "",
-    "valid": "10/29 - 11/4"
+    "valid": "11/26 - 12/2"
    },
    {
-    "name": "Francis Coppola Diamond Collection Claret Wine",
+    "name": "Charles Krug Cabernet Sauvignon Wine",
     "category": "Beer & Wine",
-    "deal": "$13.99",
-    "details": "750-mL bot. (Other 750-mL Varieties Also on Sale, See Store for Details)",
-    "savings": "Surprisingly Low Price",
-    "valid": "10/29 - 11/4"
-   },
-   {
-    "name": "Francis Coppola Diamond Collection Chardonnay Wine",
-    "category": "Beer & Wine",
-    "deal": "$10.99",
+    "deal": "$28.99",
     "details": "750-mL bot.",
     "savings": "",
-    "valid": "10/29 - 11/4"
+    "valid": "11/26 - 12/2"
    },
    {
-    "name": "Josh Cellars North Coast Reserve Cabernet Sauvignon Wine",
+    "name": "Kendall-Jackson Cabernet Sauvignon Wine",
     "category": "Beer & Wine",
-    "deal": "$16.99",
+    "deal": "$14.99",
     "details": "750-mL bot.",
     "savings": "",
-    "valid": "10/29 - 11/4"
+    "valid": "11/26 - 12/2"
    },
    {
-    "name": "Josh Cellars Cabernet Sauvignon Wine",
+    "name": "Kendall-Jackson Chardonnay Wine",
     "category": "Beer & Wine",
     "deal": "$10.99",
-    "details": "750-mL bot. (Other 750-mL Varieties Also on Sale, See Store for Details)",
+    "details": "Vintner's Reserve, 750-mL bot. (Other 750-mL Varieties on Sale, See Store for Details)",
     "savings": "Surprisingly Low Price",
-    "valid": "10/29 - 11/4"
+    "valid": "11/26 - 12/2"
    }
   ],
   "Beer": [
    {
-    "name": "12-Pack Dos Equis Lager Especial",
+    "name": "6-Pack Terrapin Beer Co. Beer",
     "category": "Beer & Wine",
     "deal": "Buy 1 Get 1 Free",
     "details": "of equal or lesser price",
-    "savings": "Save Up To $20.07",
-    "valid": "10/29 - 11/4"
-   },
-   {
-    "name": "6-Pack New Belgium Beer",
-    "category": "Beer & Wine",
-    "deal": "Buy 1 Get 1 Free",
-    "details": "of equal or lesser price",
-    "savings": "Save Up To $13.69",
-    "valid": "10/29 - 11/4"
+    "savings": "Save Up To $13.99",
+    "valid": "11/26 - 12/2"
    },
    {
     "name": "18-Pack Busch Light Beer",
     "category": "Beer & Wine",
     "deal": "$15.49",
     "details": "Or Natural Light, 12-oz can",
-    "savings": "Save Up To $4.70",
-    "valid": "10/29 - 11/4"
-   },
-   {
-    "name": "15-Pack Miller Lite Beer",
-    "category": "Beer & Wine",
-    "deal": "$18.99",
-    "details": "Or Coors Light, 16-oz bot.",
-    "savings": "Save Up To $4.50",
-    "valid": "10/29 - 11/4"
-   },
-   {
-    "name": "18-Pack Bud Light Beer",
-    "category": "Beer & Wine",
-    "deal": "$17.99",
-    "details": "12-oz can or bot.",
-    "savings": "Save Up To $6.80",
-    "valid": "10/29 - 11/4"
-   },
-   {
-    "name": "18-Pack Miller Lite Beer",
-    "category": "Beer & Wine",
-    "deal": "$17.99",
-    "details": "Or Coors Light, 12-oz can",
-    "savings": "Save Up To $4.20",
-    "valid": "10/29 - 11/4"
-   },
-   {
-    "name": "18-Pack Miller High Life Beer",
-    "category": "Beer & Wine",
-    "deal": "$15.49",
-    "details": "12-oz can or bot.",
-    "savings": "Save Up To $3.00",
-    "valid": "10/29 - 11/4"
-   },
-   {
-    "name": "12-Pack Twisted Tea Hard Iced Tea",
-    "category": "Beer & Wine",
-    "deal": "$17.99",
-    "details": "Malt Beverage, 12-oz can",
-    "savings": "Save Up To $3.80",
-    "valid": "10/29 - 11/4"
-   },
-   {
-    "name": "15-Pack Bud Light Beer",
-    "category": "Beer & Wine",
-    "deal": "$18.99",
-    "details": "Or Budweiser, 16-oz bot.",
-    "savings": "Save Up To $3.80",
-    "valid": "10/29 - 11/4"
-   },
-   {
-    "name": "12-Pack Cigar City Brewing Beer",
-    "category": "Beer & Wine",
-    "deal": "$17.99",
-    "details": "12-oz can",
     "savings": "",
-    "valid": "10/29 - 11/4"
-   },
-   {
-    "name": "12-Pack Elysian or Wicked Weed Brewing Beer",
-    "category": "Beer & Wine",
-    "deal": "$18.99",
-    "details": "12-oz can",
-    "savings": "",
-    "valid": "10/29 - 11/4"
+    "valid": "11/26 - 12/2"
    },
    {
     "name": "18-Pack Heineken Lager",
@@ -198,7 +102,15 @@
     "deal": "$26.99",
     "details": "12-oz bot.",
     "savings": "",
-    "valid": "10/29 - 11/4"
+    "valid": "11/26 - 12/2"
+   },
+   {
+    "name": "8-Pack High Noon Vodka Seltzer",
+    "category": "Beer & Wine",
+    "deal": "$19.99",
+    "details": "355-mL can",
+    "savings": "",
+    "valid": "11/26 - 12/2"
    },
    {
     "name": "12-Pack Michelob Ultra Beer",
@@ -206,77 +118,53 @@
     "deal": "$14.99",
     "details": "12-oz can or bot. (Excluding Ultra Pure Gold, Infusions, and Amber Max)",
     "savings": "Save Up To $2.40",
-    "valid": "10/29 - 11/4"
+    "valid": "11/26 - 12/2"
+   },
+   {
+    "name": "15-Pack Miller Lite or Coors Light Beer",
+    "category": "Beer & Wine",
+    "deal": "$18.99",
+    "details": "16-oz bot.",
+    "savings": "",
+    "valid": "11/26 - 12/2"
+   },
+   {
+    "name": "12-Pack Sierra Nevada Brewing Co. Beer",
+    "category": "Beer & Wine",
+    "deal": "$18.99",
+    "details": "12-oz can or bot.",
+    "savings": "",
+    "valid": "11/26 - 12/2"
    },
    {
     "name": "12-Pack Truly Hard Seltzer",
     "category": "Beer & Wine",
-    "deal": "$17.99",
+    "deal": "$18.99",
     "details": "Berry, Lemonade, Punch, or Unruly, 12-oz can",
     "savings": "",
-    "valid": "10/29 - 11/4"
-   },
-   {
-    "name": "12-Pack Yuengling Traditional Lager",
-    "category": "Beer & Wine",
-    "deal": "$13.99",
-    "details": "12-oz can or bot.",
-    "savings": "",
-    "valid": "10/29 - 11/4"
-   },
-   {
-    "name": "12-Pack Nütrl Vodka Seltzer",
-    "category": "Beer & Wine",
-    "deal": "$23.99",
-    "details": "Fruit, Variety Pack, 12-oz can",
-    "savings": "Save Up To $6.00",
-    "valid": "10/29 - 11/4"
+    "valid": "11/26 - 12/2"
    }
   ],
-  "Pork Tenderloin": [
-   {
-    "name": "Smithfield Marinated Pork Tenderloin",
-    "category": "Meat",
-    "deal": "Buy 1 Get 1 Free",
-    "details": "of equal or lesser price",
-    "savings": "Save Up To $9.79",
-    "valid": "10/29 - 11/4"
-   },
-   {
-    "name": "Publix Extra Lean Pork Loin Tenderloins",
-    "category": "Meat",
-    "deal": "$4.99 lb",
-    "details": "Boneless",
-    "savings": "Save Up To $2.00 Lb",
-    "valid": "10/29 - 11/4"
-   },
-   {
-    "name": "Publix Bacon Wrapped Pork Tenderloin, Regular or Cajun-Style",
-    "category": "Meat",
-    "deal": "$5.99 lb",
-    "details": "Prepared Fresh In-Store",
-    "savings": "",
-    "valid": "10/29 - 11/4"
-   }
-  ],
-  "Pork Shoulder": [
-   {
-    "name": "Publix Pork Picnic",
-    "category": "Meat",
-    "deal": "$2.49 lb",
-    "details": "Half",
-    "savings": "Save Up To $0.50 Lb",
-    "valid": "10/22 - 11/4"
-   }
-  ],
+  "Pork Tenderloin": [],
+  "Pork Shoulder": [],
   "Old El Paso Taco Shells": [],
   "Albanese Gummies": [],
-  "Gluten-Free": []
+  "Gluten-Free": [
+   {
+    "name": "General Mills Cheerios Cereal",
+    "category": "Grocery",
+    "deal": "Buy 1 Get 1 Free",
+    "details": "of equal or lesser price (Cheerios are labeled gluten-free)",
+    "savings": "",
+    "valid": "11/26 - 12/2"
+   }
+  ]
  },
  "notFound": [
+  "Pork tenderloins",
+  "Pork shoulder",
   "Old El Paso taco shells",
   "Albanese gummies",
-  "Gluten-free cereals",
   "Gluten-free pizzas"
  ]
 }
